@@ -2,14 +2,17 @@ package com.example.application.services;
 
 import com.example.application.models.Contact;
 import com.example.application.repositories.ContactRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
 public class ContactServiceImpl implements ContactService{
 
+    @Autowired
     private final ContactRepository contactRepository; // Dependency injection
 
     public ContactServiceImpl(ContactRepository contactRepository) {
@@ -27,4 +30,10 @@ public class ContactServiceImpl implements ContactService{
     public Contact save(Contact contact) {
         return contactRepository.save(contact);
     }
+
+    @Override
+    public Optional<Contact> getContactById(Long id) {
+        return contactRepository.findById(id);
+    }
+
 }
