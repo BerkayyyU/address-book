@@ -2,11 +2,13 @@ package com.example.application.views;
 
 import com.example.application.models.Contact;
 import com.example.application.services.ContactService;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
+import org.aspectj.weaver.ast.Not;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +37,12 @@ public class MainView extends VerticalLayout {
         contactList.add(new Contact(1L,"Mehmet","Ulguel","Company"));
         contactList.add(new Contact(1L,"Bilmemne","Ulguel","Company"));*/
         contactList.addAll(contactService.getContacts());
+
+        grid.addItemClickListener(contactItemClickEvent -> {
+            String contactID = String.valueOf(contactItemClickEvent.getItem().getId());
+            UI.getCurrent().getPage().setLocation("contactdetails/" + contactID);
+
+        });
 
         grid.setColumns("firstName");
         add(grid);
