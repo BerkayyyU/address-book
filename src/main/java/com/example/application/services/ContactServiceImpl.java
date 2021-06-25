@@ -36,4 +36,17 @@ public class ContactServiceImpl implements ContactService{
         return contactRepository.findById(id);
     }
 
+    @Override
+    public void delete(Contact contact) {
+        contactRepository.delete(contact);
+    }
+
+    @Override
+    public Contact update(Contact contact, String firstNames, String lastNames, String companys) {
+        contact.setFirstName(firstNames);
+        contact.setLastName(lastNames);
+        contact.setCompany(companys);
+        return contactRepository.save(contact);
+    }
+
 }

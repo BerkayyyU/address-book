@@ -9,4 +9,6 @@ public interface ContactService {
     Set<Contact> getContacts();
     Contact save(Contact contact);
     Optional<Contact> getContactById(Long id);
+    void delete(Contact contact);
+    Contact update(Contact contact, String firstName, String lastName, String company);
 }
