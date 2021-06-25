@@ -6,14 +6,12 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.router.BeforeEnterEvent;
-import com.vaadin.flow.router.BeforeEnterObserver;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
 
 import java.util.Optional;
 
-@Route("contactdetails/:contactID")
-public class ContactDetailsView extends VerticalLayout implements BeforeEnterObserver {
+@Route("contactdetails")
+public class ContactDetailsView extends VerticalLayout implements BeforeEnterObserver, HasUrlParameter<String> {
 
     private String contactID;
 
@@ -26,7 +24,6 @@ public class ContactDetailsView extends VerticalLayout implements BeforeEnterObs
     public ContactDetailsView(ContactService contactService){
         this.contactService = contactService;
 
-        Binder<Contact> binder = new Binder();
 
 
         firstName.setLabel("First Name");
@@ -40,13 +37,29 @@ public class ContactDetailsView extends VerticalLayout implements BeforeEnterObs
 
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
-        contactID = beforeEnterEvent.getRouteParameters().get("contactID").get();
-        /*Contact contact = new Contact();
-        Long.valueOf(contactID);*/
-        Optional<Contact> contact = contactService.getContactById(Long.valueOf(contactID));
-        firstName.setValue(contact.get().getFirstName());
-        lastName.setValue(contact.get().getLastName());
-        company.setValue(contact.get().getCompany());
+        /*contactID = beforeEnterEvent.getRouteParameters().get("contactID").get();
+        if (contactID=="0"){
+
+        }else{
+            /*Contact contact = new Contact();
+        Long.valueOf(contactID);
+
+        }*/
+        
+    }
+
+    @Override
+    public void setParameter(BeforeEvent beforeEvent, @OptionalParameter String parameter) {
+        if (parameter == null) {
+            firstName.setPlaceholder("Ad giriniz:");
+            lastName.setPlaceholder("Soyad giriniz:");
+            company.setPlaceholder("Şirket  giriniz:");
+        } else {
+            Optional<Contact> contact = contactService.getContactById(Long.valueOf(parameter));
+            firstName.setValue(contact.get().getFirstName());
+            lastName.setValue(contact.get().getLastName());
+            company.setValue(contact.get().getCompany());
+        }
 
     }
 }

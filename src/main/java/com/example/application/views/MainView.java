@@ -5,6 +5,7 @@ import com.example.application.services.ContactService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
@@ -24,6 +25,12 @@ public class MainView extends VerticalLayout {
     public MainView(ContactService contactService){
 
         this.contactService= contactService;
+
+        Button btnNew = new Button("Add", VaadinIcon.INSERT.create());
+
+        btnNew.addClickListener(buttonClickEvent -> {
+            UI.getCurrent().getPage().setLocation("contactdetails");
+        });
 
         Grid<Contact> grid = new Grid<>(Contact.class);
         grid.setItems(contactList);
@@ -45,7 +52,7 @@ public class MainView extends VerticalLayout {
         });
 
         grid.setColumns("firstName");
-        add(grid);
+        add(grid,btnNew);
     }
 
 }
