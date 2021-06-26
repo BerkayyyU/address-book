@@ -1,6 +1,7 @@
 package com.example.application.services;
 
 import com.example.application.models.Contact;
+import com.example.application.models.Phone;
 import com.example.application.repositories.ContactRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,7 +47,16 @@ public class ContactServiceImpl implements ContactService{
         contact.setFirstName(firstNames);
         contact.setLastName(lastNames);
         contact.setCompany(companys);
+        /*phone.setMobile(mobiles);
+        phone.setHome(homes);
+        phone.setJob(jobs);
+        phone.setFax(faxs);*/
         return contactRepository.save(contact);
     }
+
+    /*@Override
+    public Optional<Phone> getPhoneById(Long id) {
+        return contactRepository.findContactByPhoneId(id);
+    }*/
 
 }

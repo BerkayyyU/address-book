@@ -1,6 +1,7 @@
 package com.example.application.views;
 
 import com.example.application.models.Contact;
+import com.example.application.models.Phone;
 import com.example.application.services.ContactService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -21,26 +22,35 @@ public class ContactDetailsView extends VerticalLayout implements  HasUrlParamet
     private final ContactService contactService;
 
     Binder<Contact> binder = new Binder<>();
+    //Binder<Phone> phoneBinder= new Binder<>();
 
     Long itemIdForEdition=0L;
 
-    TextField firstName = new TextField();
-    TextField lastName = new TextField();
-    TextField company = new TextField();
+    TextField txtFirstName = new TextField();
+    TextField txtLastName = new TextField();
+    TextField txtCompany = new TextField();
+    TextField txtMobile = new TextField();
+    TextField txtHome = new TextField();
+    TextField txtJob = new TextField();
+    TextField txtFax = new TextField();
+
 
 
     public ContactDetailsView(ContactService contactService){
         this.contactService = contactService;
 
+        txtFirstName.setLabel("First Name");
+        txtLastName.setLabel("Last Name");
+        txtCompany.setLabel("Company");
+        txtMobile.setLabel("Mobile");
+        txtHome.setLabel("Home");
+        txtJob.setLabel("Job");
+        txtFax.setLabel("Fax");
 
-
-        firstName.setLabel("First Name");
-        lastName.setLabel("Last Name");
-        company.setLabel("Company");
-
-        binder.bind(firstName,Contact::getFirstName,Contact::setFirstName);
+        /*binder.bind(firstName,Contact::getFirstName,Contact::setFirstName);
         binder.bind(lastName,Contact::getLastName,Contact::setLastName);
         binder.bind(company,Contact::getCompany,Contact::setCompany);
+        phoneBinder.bind(mobile,Phone::getMobile,Phone::setMobile);*/
 
     }
 
@@ -48,9 +58,13 @@ public class ContactDetailsView extends VerticalLayout implements  HasUrlParamet
     @Override
     public void setParameter(BeforeEvent beforeEvent, @OptionalParameter String parameter) {
         if (parameter == null) {
-            firstName.setPlaceholder("Ad giriniz:");
-            lastName.setPlaceholder("Soyad giriniz:");
-            company.setPlaceholder("Şirket  giriniz:");
+            txtFirstName.setPlaceholder("Ad giriniz:");
+            txtLastName.setPlaceholder("Soyad giriniz:");
+            txtCompany.setPlaceholder("Şirket  giriniz:");
+            txtMobile.setPlaceholder("mobile  giriniz:");
+            txtHome.setPlaceholder("home  giriniz:");
+            txtJob.setPlaceholder("job  giriniz:");
+            txtFax.setPlaceholder("fax  giriniz:");
 
             Button btnSave = new Button("Save", VaadinIcon.INSERT.create());
             Button btnCancel = new Button("Cancel");
@@ -73,7 +87,7 @@ public class ContactDetailsView extends VerticalLayout implements  HasUrlParamet
                 UI.getCurrent().getPage().setLocation("/");
             });
 
-            add(firstName, lastName, company,btnSave, btnCancel);
+            add(txtFirstName, txtLastName, txtCompany, txtMobile, txtHome, txtJob, txtFax, btnSave, btnCancel);
 
         } else {
 
@@ -81,22 +95,35 @@ public class ContactDetailsView extends VerticalLayout implements  HasUrlParamet
             Button btnDelete = new Button("Delete");
 
             Optional<Contact> contact = contactService.getContactById(Long.valueOf(parameter));
-            firstName.setValue(contact.get().getFirstName());
-            lastName.setValue(contact.get().getLastName());
-            company.setValue(contact.get().getCompany());
+            //Optional<Phone> phone = contactService.getPhoneById(Long.valueOf(parameter));
+
+            txtFirstName.setValue(contact.get().getFirstName());
+            txtLastName.setValue(contact.get().getLastName());
+            txtCompany.setValue(contact.get().getCompany());
+
+            txtMobile.setValue(contact.get().getPhone().getMobile());
+            txtHome.setValue(contact.get().getPhone().getHome());
+            txtJob.setValue(contact.get().getPhone().getJob());
+            txtFax.setValue(contact.get().getPhone().getFax());
 
 
 
             btnUpdate.addClickListener(buttonClickEvent -> {
-                String firstNames = firstName.getValue();
-                String lastNames = lastName.getValue();
-                String companys = company.getValue();
+                String txtFirstNameValue = txtFirstName.getValue();
+                String txtLastNameValue = txtLastName.getValue();
+                String txtCompanyValue = txtCompany.getValue();
+
+                String txtMobileValue = txtMobile.getValue();
+                String txtHomeValue = txtHome.getValue();
+                String txtJobValue = txtJob.getValue();
+                String txtFaxValue = txtFax.getValue();
 
                 /*contact.get().setFirstName(firstNames);
                 contact.get().setLastName(lastNames);
                 contact.get().setCompany(companys);*/
 
-                contactService.update(contact.get(),firstNames,lastNames,companys);
+                contactService.update(contact.get(),txtFirstNameValue,txtLastNameValue,txtCompanyValue);
+
 
                 UI.getCurrent().getPage().setLocation("/");
             });
@@ -106,7 +133,7 @@ public class ContactDetailsView extends VerticalLayout implements  HasUrlParamet
                 UI.getCurrent().getPage().setLocation("/");
             });
 
-            add(firstName, lastName, company,btnUpdate,btnDelete);
+            add(txtFirstName, txtLastName, txtCompany, txtMobile, txtHome, txtJob, txtFax,btnUpdate,btnDelete);
         }
 
     }

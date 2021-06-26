@@ -1,0 +1,9 @@
+gridke{
+    background-color: blue;
+}
+[part~="cell"] ::slotted(vaadin-grid-cell-content) {
+    background-color: blue !important;
+}
+[part~="cell"]:not([part~="details-cell"]){
+    background-color: blue !important;
+}

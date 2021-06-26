@@ -6,15 +6,16 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
-import org.aspectj.weaver.ast.Not;
+import com.vaadin.flow.theme.Theme;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Route
+@Theme(themeFolder = "adresdefteri")
 public class MainView extends VerticalLayout {
 
     List<Contact> contactList = new ArrayList<>();
@@ -33,26 +34,27 @@ public class MainView extends VerticalLayout {
         });
 
         Grid<Contact> grid = new Grid<>(Contact.class);
+        grid.setClassName("gridke");
         grid.setItems(contactList);
 
         grid.removeColumnByKey("id");
         grid.removeColumnByKey("lastName");
         grid.removeColumnByKey("company");
+        grid.removeColumnByKey("firstName");
+        grid.removeColumnByKey("phone");
 
-        /*contactList.add(new Contact(1L,"Berkay","Ulguel","Company"));
-        contactList.add(new Contact(1L,"Ali","Ulguel","Company"));
-        contactList.add(new Contact(1L,"Mehmet","Ulguel","Company"));
-        contactList.add(new Contact(1L,"Bilmemne","Ulguel","Company"));*/
+
         contactList.addAll(contactService.getContacts());
 
         grid.addItemClickListener(contactItemClickEvent -> {
             String contactID = String.valueOf(contactItemClickEvent.getItem().getId());
             UI.getCurrent().getPage().setLocation("contactdetails/" + contactID);
-
         });
 
-        grid.setColumns("firstName");
+        grid.addColumn(Contact::getFirstName).setHeader("");
+        grid.addColumn(Contact::getLastName).setHeader("");
         add(grid,btnNew);
+
     }
 
 }
