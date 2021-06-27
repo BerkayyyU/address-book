@@ -19,7 +19,7 @@ public class bootstrapData implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         Contact contact1 = new Contact();
-        contact1.setFirstName("Berkay");
+        contact1.setFirstName("berkay");
         contact1.setLastName("Ulguel");
         contact1.setCompany("Galaksiya");
 

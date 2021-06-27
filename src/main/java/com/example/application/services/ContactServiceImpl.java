@@ -28,6 +28,13 @@ public class ContactServiceImpl implements ContactService{
     }
 
     @Override
+    public Set<Contact> getContacts(String name) {
+        Set<Contact> contacList = new HashSet<>();
+        contactRepository.findByFirstNameContainingOrLastNameContaining(name,name).iterator().forEachRemaining(contacList::add);
+        return contacList;
+    }
+
+    @Override
     public Contact save(Contact contact) {
         return contactRepository.save(contact);
     }

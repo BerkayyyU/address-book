@@ -11,10 +11,12 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.router.*;
+import com.vaadin.flow.theme.Theme;
 
 import java.util.Optional;
 
 @Route("contactdetails")
+@Theme(themeFolder = "adresdefteri")
 public class ContactDetailsView extends VerticalLayout implements  HasUrlParameter<String> {
 
     private String contactID;
@@ -46,6 +48,7 @@ public class ContactDetailsView extends VerticalLayout implements  HasUrlParamet
         txtHome.setLabel("Home");
         txtJob.setLabel("Job");
         txtFax.setLabel("Fax");
+        txtFirstName.setClassName("first-name");
 
         /*binder.bind(firstName,Contact::getFirstName,Contact::setFirstName);
         binder.bind(lastName,Contact::getLastName,Contact::setLastName);

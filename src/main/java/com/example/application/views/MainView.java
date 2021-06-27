@@ -7,6 +7,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.Theme;
 
@@ -19,6 +20,10 @@ import java.util.List;
 public class MainView extends VerticalLayout {
 
     List<Contact> contactList = new ArrayList<>();
+
+    TextField txtSearch = new TextField();
+
+    Grid<Contact> grid = new Grid<>(Contact.class);
 
     private final ContactService contactService; //Dependency injection
 
@@ -33,7 +38,6 @@ public class MainView extends VerticalLayout {
             UI.getCurrent().getPage().setLocation("contactdetails");
         });
 
-        Grid<Contact> grid = new Grid<>(Contact.class);
         grid.setClassName("gridke");
         grid.setItems(contactList);
 
@@ -44,7 +48,12 @@ public class MainView extends VerticalLayout {
         grid.removeColumnByKey("phone");
 
 
+        grid.setHeight("300px");
+        grid.setWidth("200px");
+
         contactList.addAll(contactService.getContacts());
+
+
 
         grid.addItemClickListener(contactItemClickEvent -> {
             String contactID = String.valueOf(contactItemClickEvent.getItem().getId());
@@ -53,8 +62,26 @@ public class MainView extends VerticalLayout {
 
         grid.addColumn(Contact::getFirstName).setHeader("");
         grid.addColumn(Contact::getLastName).setHeader("");
-        add(grid,btnNew);
+
+
+
+        txtSearch.addValueChangeListener(textFieldStringComponentValueChangeEvent -> {
+            refreshData(txtSearch.getValue());
+        });
+
+        add(grid,btnNew,txtSearch);
 
     }
+
+    private void refreshData(String filter){
+        List<Contact> contactListFiltered = new ArrayList<>();
+        contactListFiltered.addAll(contactService.getContacts(filter));
+        grid.setItems(contactListFiltered);
+    }
+
+
+
+
+
 
 }
