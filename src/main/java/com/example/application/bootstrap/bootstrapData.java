@@ -2,7 +2,9 @@ package com.example.application.bootstrap;
 
 import com.example.application.models.Contact;
 import com.example.application.models.Phone;
+import com.example.application.models.User;
 import com.example.application.services.ContactService;
+import com.example.application.services.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -10,13 +12,21 @@ import org.springframework.stereotype.Component;
 public class bootstrapData implements CommandLineRunner {
 
     private final ContactService contactService;
+    private final UserService userService;
 
-    public bootstrapData(ContactService contactService) {
+    public bootstrapData(ContactService contactService, UserService userService) {
         this.contactService = contactService;
+        this.userService = userService;
     }
 
     @Override
     public void run(String... args) throws Exception {
+
+        User user1 = new User();
+        user1.setEmail("berkay");
+        user1.setPassword("123");
+        userService.save(user1);
+
 
         Contact contact1 = new Contact();
         contact1.setFirstName("berkay");
