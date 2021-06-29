@@ -33,7 +33,7 @@ public class LoginView extends VerticalLayout {
         btnLogin.addClickListener(buttonClickEvent -> {
             User result = userService.login(txtEmail.getValue(),txtPassword.getValue());
             if(result.getId()!=null){
-                UI.getCurrent().getPage().setLocation("/");
+                UI.getCurrent().getPage().setLocation("/"+ result.getId());
             }else{
                 Notification.show("Hatalı giriş!");
             }

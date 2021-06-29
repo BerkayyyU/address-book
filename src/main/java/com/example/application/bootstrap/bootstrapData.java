@@ -1,7 +1,6 @@
 package com.example.application.bootstrap;
 
 import com.example.application.models.Contact;
-import com.example.application.models.Phone;
 import com.example.application.models.User;
 import com.example.application.services.ContactService;
 import com.example.application.services.UserService;
@@ -25,23 +24,21 @@ public class bootstrapData implements CommandLineRunner {
         User user1 = new User();
         user1.setEmail("berkay");
         user1.setPassword("123");
+        user1.setName("brky");
         userService.save(user1);
 
+        User user2 = new User();
+        user2.setEmail("mert");
+        user2.setPassword("123");
+        user2.setName("mert");
+        userService.save(user2);
 
         Contact contact1 = new Contact();
         contact1.setFirstName("berkay");
         contact1.setLastName("Ulguel");
         contact1.setCompany("Galaksiya");
 
-        Phone phone1 = new Phone();
-        phone1.setMobile("0534 625 10 75");
-        phone1.setHome("123 123");
-        phone1.setJob("222 222");
-        phone1.setFax("333 333");
-
-        phone1.setContact(contact1);
-        contact1.setPhone(phone1);
-
+        contact1.setUser(user1);
         contactService.save(contact1);
 
         Contact contact2 = new Contact();
@@ -49,15 +46,19 @@ public class bootstrapData implements CommandLineRunner {
         contact2.setLastName("Cakar");
         contact2.setCompany("SPSS");
 
-        Phone phone2 = new Phone();
-        phone2.setMobile("0522 222 222");
-        phone2.setHome("111 1111");
-        phone2.setJob("555 555");
-        phone2.setFax("999 999");
-
-        phone2.setContact(contact2);
-        contact2.setPhone(phone2);
+        contact2.setUser(user1);
         contactService.save(contact2);
+
+
+        Contact contact3 = new Contact();
+        contact3.setFirstName("Ali");
+        contact3.setLastName("Duru");
+        contact3.setCompany("Dunno");
+
+
+        contact3.setUser(user2);
+        contactService.save(contact3);
+
 
     }
 }

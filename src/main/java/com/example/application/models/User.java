@@ -2,10 +2,9 @@ package com.example.application.models;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Data
@@ -17,4 +16,7 @@ public class User {
     private String name;
     private String email;
     private String password;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy ="user")
+    private Set<Contact> contacts = new HashSet<>();
 }

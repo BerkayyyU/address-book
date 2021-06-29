@@ -8,16 +8,21 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.BeforeEvent;
+import com.vaadin.flow.router.HasUrlParameter;
+import com.vaadin.flow.router.OptionalParameter;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.Theme;
 
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
-@Route
+@Route("/")
 @Theme(themeFolder = "adresdefteri")
-public class MainView extends VerticalLayout {
+public class MainView extends VerticalLayout implements HasUrlParameter<String> {
 
     List<Contact> contactList = new ArrayList<>();
 
@@ -39,19 +44,15 @@ public class MainView extends VerticalLayout {
         });
 
         grid.setClassName("gridke");
-        grid.setItems(contactList);
+        //grid.setItems(contactList);
 
-        grid.removeColumnByKey("id");
-        grid.removeColumnByKey("lastName");
-        grid.removeColumnByKey("company");
-        grid.removeColumnByKey("firstName");
-        grid.removeColumnByKey("phone");
+
 
 
         grid.setHeight("300px");
         grid.setWidth("200px");
 
-        contactList.addAll(contactService.getContacts());
+        //contactList.addAll(contactService.getContacts());
 
 
 
@@ -60,8 +61,7 @@ public class MainView extends VerticalLayout {
             UI.getCurrent().getPage().setLocation("contactdetails/" + contactID);
         });
 
-        grid.addColumn(Contact::getFirstName).setHeader("");
-        grid.addColumn(Contact::getLastName).setHeader("");
+
 
 
 
@@ -80,8 +80,28 @@ public class MainView extends VerticalLayout {
     }
 
 
+    @Override
+    public void setParameter(BeforeEvent beforeEvent,  @OptionalParameter String parameter) {
+        Set<Contact> contact = contactService.getContactsByUserId(Long.valueOf(parameter));
+        if(contact==null){
+            grid.addColumn(Contact::getFirstName).setHeader("");
+            grid.addColumn(Contact::getLastName).setHeader("");
+            grid.removeColumnByKey("id");
+            grid.removeColumnByKey("lastName");
+            grid.removeColumnByKey("company");
+            grid.removeColumnByKey("firstName");
+            grid.removeColumnByKey("user");
 
+        }else{
+            grid.addColumn(Contact::getFirstName).setHeader("");
+            grid.addColumn(Contact::getLastName).setHeader("");
+            grid.removeColumnByKey("id");
+            grid.removeColumnByKey("lastName");
+            grid.removeColumnByKey("company");
+            grid.removeColumnByKey("firstName");
+            grid.removeColumnByKey("user");
+            grid.setItems(contact);
+        }
 
-
-
+    }
 }
