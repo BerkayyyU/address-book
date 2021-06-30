@@ -56,7 +56,7 @@ public class ContactServiceImpl implements ContactService{
     }
 
     @Override
-    public Contact update(Contact contact, String firstName, String lastName, String company, String mobilePhone, String homePhone, String jobPhone, String faxPhone) {
+    public Contact update(Contact contact, String firstName, String lastName, String company, String mobilePhone, String homePhone, String jobPhone, String faxPhone, String homeAddress, String jobAddress, String otherAddress) {
         contact.setFirstName(firstName);
         contact.setLastName(lastName);
         contact.setCompany(company);
@@ -64,6 +64,9 @@ public class ContactServiceImpl implements ContactService{
         contact.setHomePhone(homePhone);
         contact.setJobPhone(jobPhone);
         contact.setFaxPhone(faxPhone);
+        contact.setHomeAddress(homeAddress);
+        contact.setJobAddress(jobAddress);
+        contact.setOtherAddress(otherAddress);
 
         return contactRepository.save(contact);
     }

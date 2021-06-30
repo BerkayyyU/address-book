@@ -24,6 +24,9 @@ public class Contact {
     private String homePhone;
     private String jobPhone;
     private String faxPhone;
+    private String homeAddress;
+    private String jobAddress;
+    private String otherAddress;
 
 
     @ManyToOne

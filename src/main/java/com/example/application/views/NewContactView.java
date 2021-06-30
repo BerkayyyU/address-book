@@ -33,6 +33,9 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
     TextField txtHomePhone = new TextField("Home Phone","Please enter home phone");
     TextField txtJobPhone = new TextField("Job Phone","Please enter job phone");
     TextField txtFaxPhone = new TextField("Fax Phone","Please enter fax phone");
+    TextField txtHomeAdress = new TextField("Home Address","Please enter home address");
+    TextField txtJobAddress = new TextField("Job Address","Please enter job address");
+    TextField txtOtherAddress = new TextField("Other Address","Please enter other address");
 
     private final ContactService contactService;
     private final UserService userService;
@@ -49,6 +52,9 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
         binder.bind(txtHomePhone,Contact::getHomePhone,Contact::setHomePhone);
         binder.bind(txtJobPhone,Contact::getJobPhone,Contact::setJobPhone);
         binder.bind(txtFaxPhone,Contact::getFaxPhone,Contact::setFaxPhone);
+        binder.bind(txtHomeAdress,Contact::getHomeAddress,Contact::setHomeAddress);
+        binder.bind(txtJobAddress,Contact::getJobAddress,Contact::setJobAddress);
+        binder.bind(txtOtherAddress,Contact::getOtherAddress,Contact::setOtherAddress);
 
         btnSave.addClickListener(buttonClickEvent -> {
             try {
@@ -66,7 +72,7 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
             UI.getCurrent().getPage().setLocation("user/" + userID + "/contacts");
         });
 
-        add(txtFirstName, txtLastName,txtCompany, txtMobilePhone,txtHomePhone,txtJobPhone,txtFaxPhone, btnSave, btnCancel);
+        add(txtFirstName, txtLastName,txtCompany, txtMobilePhone,txtHomePhone,txtJobPhone,txtFaxPhone,txtHomeAdress,txtJobAddress,txtOtherAddress, btnSave, btnCancel);
 
     }
 

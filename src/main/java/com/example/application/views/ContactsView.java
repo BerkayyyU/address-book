@@ -91,6 +91,9 @@ public class ContactsView extends VerticalLayout implements BeforeEnterObserver 
         grid.removeColumnByKey("homePhone");
         grid.removeColumnByKey("jobPhone");
         grid.removeColumnByKey("faxPhone");
+        grid.removeColumnByKey("homeAddress");
+        grid.removeColumnByKey("jobAddress");
+        grid.removeColumnByKey("otherAddress");
 
 
     }
