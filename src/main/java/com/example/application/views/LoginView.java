@@ -11,7 +11,7 @@ import com.vaadin.flow.router.Route;
 
 
 
-@Route("login")
+@Route("/")
 public class LoginView extends VerticalLayout {
 
     private final UserService userService;
@@ -33,7 +33,7 @@ public class LoginView extends VerticalLayout {
         btnLogin.addClickListener(buttonClickEvent -> {
             User result = userService.login(txtEmail.getValue(),txtPassword.getValue());
             if(result.getId()!=null){
-                UI.getCurrent().getPage().setLocation("/"+ result.getId());
+                UI.getCurrent().getPage().setLocation("contacts/"+ result.getId());
             }else{
                 Notification.show("Hatalı giriş!");
             }

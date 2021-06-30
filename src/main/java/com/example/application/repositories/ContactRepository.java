@@ -4,11 +4,14 @@ import com.example.application.models.Contact;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface ContactRepository extends CrudRepository<Contact,Long> {
     //Optional<Phone> findContactByPhoneId(Long id);
     List<Contact> findByFirstNameContainingOrLastNameContaining(String firstName, String lastName);
-    List<Contact> findByUserId(Long id);
+    List<Contact> findContactsByUserId(Long id);
+    //Contact findContactByUserIdAndContactId(Long userID, Long contactID);
+    Optional<Contact> findContactByIdAndUserId(Long contactID, Long userID );
 
 }

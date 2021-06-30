@@ -14,11 +14,12 @@ import com.vaadin.flow.theme.Theme;
 
 import java.util.Optional;
 
-@Route("contactdetails")
+@Route("/contacts/:userID/contact-details/:contactID")
 @Theme(themeFolder = "adresdefteri")
-public class ContactDetailsView extends VerticalLayout implements  HasUrlParameter<String> {
+public class ContactDetailsView extends VerticalLayout implements  BeforeEnterObserver{
 
     private String contactID;
+    private String userID;
 
     private final ContactService contactService;
 
@@ -26,16 +27,12 @@ public class ContactDetailsView extends VerticalLayout implements  HasUrlParamet
 
     Long itemIdForEdition=0L;
 
-    TextField txtFirstName = new TextField();
-    TextField txtLastName = new TextField();
-    TextField txtCompany = new TextField();
+    TextField txtFirstName = new TextField("First Name");
+    TextField txtLastName = new TextField("Last Name");
+    TextField txtCompany = new TextField("Company");
 
     public ContactDetailsView(ContactService contactService){
         this.contactService = contactService;
-
-        txtFirstName.setLabel("First Name");
-        txtLastName.setLabel("Last Name");
-        txtCompany.setLabel("Company");
 
 
         binder.bind(txtFirstName,Contact::getFirstName,Contact::setFirstName);
@@ -46,68 +43,42 @@ public class ContactDetailsView extends VerticalLayout implements  HasUrlParamet
     }
 
 
+
     @Override
-    public void setParameter(BeforeEvent beforeEvent, @OptionalParameter String parameter) {
-        if (parameter == null) {
-            txtFirstName.setPlaceholder("Ad giriniz:");
-            txtLastName.setPlaceholder("Soyad giriniz:");
-            txtCompany.setPlaceholder("Şirket  giriniz:");
+    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
+        Button btnUpdate = new Button("Update");
+        Button btnDelete = new Button("Delete");
 
-            Button btnSave = new Button("Save", VaadinIcon.INSERT.create());
-            Button btnCancel = new Button("Cancel");
+        contactID = beforeEnterEvent.getRouteParameters().get("contactID").get();
+        userID = beforeEnterEvent.getRouteParameters().get("userID").get();
 
-            btnSave.addClickListener(buttonClickEvent -> {
+        //Optional<Contact> contact = contactService.getContactById(Long.valueOf(contactID));
+        Optional<Contact> contact = contactService.getContactByUserIdAndContactId(Long.valueOf(contactID),Long.valueOf(userID));
 
-                Contact contact = new Contact();
-                try {
-                    binder.writeBean(contact);
-                } catch (ValidationException e) {
-                    e.printStackTrace();
-                }
-                contact.setId(itemIdForEdition);
-                contactService.save(contact);
-                UI.getCurrent().getPage().setLocation("/");
-
-            });
-
-            btnCancel.addClickListener(buttonClickEvent -> {
-                UI.getCurrent().getPage().setLocation("/");
-            });
-
-            add(txtFirstName, txtLastName, txtCompany, btnSave, btnCancel);
-
-        } else {
-
-            Button btnUpdate = new Button("Update");
-            Button btnDelete = new Button("Delete");
-
-            Optional<Contact> contact = contactService.getContactById(Long.valueOf(parameter));
-            //Optional<Phone> phone = contactService.getPhoneById(Long.valueOf(parameter));
-
-            txtFirstName.setValue(contact.get().getFirstName());
-            txtLastName.setValue(contact.get().getLastName());
-            txtCompany.setValue(contact.get().getCompany());
+        txtFirstName.setValue(contact.get().getFirstName());
+        txtLastName.setValue(contact.get().getLastName());
+        txtCompany.setValue(contact.get().getCompany());
 
 
-            btnUpdate.addClickListener(buttonClickEvent -> {
-                String txtFirstNameValue = txtFirstName.getValue();
-                String txtLastNameValue = txtLastName.getValue();
-                String txtCompanyValue = txtCompany.getValue();
+        btnUpdate.addClickListener(buttonClickEvent -> {
+            String txtFirstNameValue = txtFirstName.getValue();
+            String txtLastNameValue = txtLastName.getValue();
+            String txtCompanyValue = txtCompany.getValue();
 
 
-                contactService.update(contact.get(),txtFirstNameValue,txtLastNameValue,txtCompanyValue);
+            contactService.update(contact.get(),txtFirstNameValue,txtLastNameValue,txtCompanyValue);
 
 
-                UI.getCurrent().getPage().setLocation("/");
-            });
+            UI.getCurrent().getPage().setLocation("/contacts/" + userID);
+        });
 
-            btnDelete.addClickListener(buttonClickEvent -> {
-                contactService.delete(contact.get());
-                UI.getCurrent().getPage().setLocation("/");
-            });
+        btnDelete.addClickListener(buttonClickEvent -> {
+            contactService.delete(contact.get());
+            UI.getCurrent().getPage().setLocation("/contacts/" + userID);
+        });
 
-            add(txtFirstName, txtLastName, txtCompany,btnUpdate,btnDelete);
-        }
+        add(txtFirstName, txtLastName, txtCompany,btnUpdate,btnDelete);
+
 
     }
 }
