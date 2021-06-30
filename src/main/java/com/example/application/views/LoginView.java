@@ -6,10 +6,9 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
-
-
 
 @Route("/")
 public class LoginView extends VerticalLayout {
@@ -18,7 +17,7 @@ public class LoginView extends VerticalLayout {
 
     TextField txtEmail = new TextField();
 
-    TextField txtPassword = new TextField();
+    PasswordField password = new PasswordField();
 
     Button btnLogin = new Button("Giriş yap");
 
@@ -26,18 +25,20 @@ public class LoginView extends VerticalLayout {
         this.userService = userService;
 
         txtEmail.setLabel("Email giriniz:");
-        txtPassword.setLabel("Şifre giriniz:");
+        password.setLabel("Şifre giriniz:");
 
-        add(txtEmail,txtPassword,btnLogin);
+
 
         btnLogin.addClickListener(buttonClickEvent -> {
-            User result = userService.login(txtEmail.getValue(),txtPassword.getValue());
+            User result = userService.login(txtEmail.getValue(),password.getValue());
             if(result.getId()!=null){
-                UI.getCurrent().getPage().setLocation("contacts/"+ result.getId());
+                UI.getCurrent().getPage().setLocation("user/"+ result.getId()+ "/contacts");
             }else{
                 Notification.show("Hatalı giriş!");
             }
         });
+
+        add(txtEmail,password,btnLogin);
 
     }
 }

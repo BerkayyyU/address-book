@@ -18,7 +18,7 @@ public class SignInView extends VerticalLayout {
     TextField txtName = new TextField();
     TextField txtEmail = new TextField();
     PasswordField password = new PasswordField();
-    PasswordField password2 = new PasswordField();
+    PasswordField passwordCheck = new PasswordField();
 
     Button btnSignIn = new Button("Kayıt Ol");
 
@@ -28,22 +28,22 @@ public class SignInView extends VerticalLayout {
         txtName.setLabel("Ad giriniz: ");
         txtEmail.setLabel("Email giriniz:");
         password.setLabel("Şifre giriniz: ");
-        password2.setLabel("Şifreyi tekrardan giriniz: ");
+        passwordCheck.setLabel("Şifreyi tekrardan giriniz: ");
 
         btnSignIn.addClickListener(buttonClickEvent -> {
-            if(password.getPattern()==password2.getPattern()){
+            if(password.getPattern()==passwordCheck.getPattern()){
                 User newUser = new User();
                 newUser.setEmail(txtEmail.getValue());
                 newUser.setName(txtName.getValue());
                 newUser.setPassword(password.getValue());
                 userService.save(newUser);
-                UI.getCurrent().getPage().setLocation("/login");
+                UI.getCurrent().getPage().setLocation("/");
             }else{
                 Notification.show("Şifreler eşleşmiyor");
             }
 
         });
 
-        add(txtName,txtEmail,password,password2,btnSignIn);
+        add(txtName,txtEmail,password,passwordCheck,btnSignIn);
     }
 }

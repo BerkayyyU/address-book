@@ -13,7 +13,7 @@ import java.util.Set;
 public class ContactServiceImpl implements ContactService{
 
     @Autowired
-    private final ContactRepository contactRepository; // Dependency injection
+    private final ContactRepository contactRepository;
 
     public ContactServiceImpl(ContactRepository contactRepository) {
         this.contactRepository = contactRepository;
@@ -39,11 +39,6 @@ public class ContactServiceImpl implements ContactService{
     }
 
     @Override
-    public Optional<Contact> getContactById(Long id) {
-        return contactRepository.findById(id);
-    }
-
-    @Override
     public  Set<Contact> getContactsByUserId(Long id) {
         Set<Contact> contactSet = new HashSet<>();
         contactRepository.findContactsByUserId(id).iterator().forEachRemaining(contactSet::add);
@@ -51,7 +46,7 @@ public class ContactServiceImpl implements ContactService{
     }
 
     @Override
-    public Optional<Contact> getContactByUserIdAndContactId(Long contactID, Long userID) {
+    public Contact getContactByIdAndUserId(Long contactID, Long userID) {
         return contactRepository.findContactByIdAndUserId(contactID,userID);
     }
 

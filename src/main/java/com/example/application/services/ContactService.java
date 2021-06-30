@@ -9,9 +9,8 @@ public interface ContactService {
     Set<Contact> getContacts();
     Set<Contact> getContacts(String filter);
     Contact  save(Contact contact);
-    Optional<Contact> getContactById(Long id);
     Set<Contact> getContactsByUserId(Long id);
-    Optional<Contact> getContactByUserIdAndContactId(Long contactID, Long userID);
+    Contact getContactByIdAndUserId(Long contactID, Long userID);
     void delete(Contact contact);
     Contact update(Contact contact, String firstName, String lastName, String company);
 }

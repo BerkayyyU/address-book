@@ -13,7 +13,7 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.router.*;
 
-@Route("/contacts/:userID/new-contact")
+@Route("user/:userID/contacts/new-contact")
 public class NewContactView extends VerticalLayout implements BeforeEnterObserver {
 
     String userID;
@@ -28,7 +28,7 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
     TextField txtLastName = new TextField("Last Name","Soyad giriniz...");
     TextField txtCompany = new TextField("Company","Şirket giriniz...");
 
-    private final ContactService contactService; //Dependency injection
+    private final ContactService contactService;
     private final UserService userService;
 
     public NewContactView(ContactService contactService, UserService userService){
@@ -36,23 +36,13 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
         this.userService = userService;
 
 
-
-
-
-        //contactService.save(contact);
-        //contact.setId(itemIdForEdition);
-        //contact.setUser(user);
-
         binder.bind(txtFirstName,Contact::getFirstName,Contact::setFirstName);
         binder.bind(txtLastName,Contact::getLastName,Contact::setLastName);
         binder.bind(txtCompany,Contact::getCompany,Contact::setCompany);
 
 
-
-
         Button btnSave = new Button("Save", VaadinIcon.INSERT.create());
         Button btnCancel = new Button("Cancel");
-
 
 
         btnSave.addClickListener(buttonClickEvent -> {
@@ -64,13 +54,11 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
             contact.setId(itemIdForEdition);
             contactService.save(contact);
 
+            UI.getCurrent().getPage().setLocation("user/" + userID + "/contacts");
+        });
 
-
-            /*contact.setFirstName(txtFirstName.getValue());
-            contact.setLastName(txtLastName.getValue());
-            contact.setCompany(txtCompany.getValue());*/
-
-            UI.getCurrent().getPage().setLocation("/contacts/" + userID);
+        btnCancel.addClickListener(buttonClickEvent -> {
+            UI.getCurrent().getPage().setLocation("user/" + userID + "/contacts");
         });
 
         add(txtFirstName, txtLastName, txtCompany, btnSave, btnCancel);
