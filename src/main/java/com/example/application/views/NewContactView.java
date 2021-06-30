@@ -17,33 +17,38 @@ import com.vaadin.flow.router.*;
 public class NewContactView extends VerticalLayout implements BeforeEnterObserver {
 
     String userID;
+    Long contactID=0L;
 
     Binder<Contact> binder = new Binder<>();
 
     Contact contact = new Contact();
 
-    Long itemIdForEdition=0L;
+    Button btnSave = new Button("Save", VaadinIcon.INSERT.create());
+    Button btnCancel = new Button("Cancel");
 
-    TextField txtFirstName = new TextField("First Name", "Ad giriniz...");
-    TextField txtLastName = new TextField("Last Name","Soyad giriniz...");
-    TextField txtCompany = new TextField("Company","Şirket giriniz...");
+    TextField txtFirstName = new TextField("First Name", "Please enter first name");
+    TextField txtLastName = new TextField("Last Name","Please enter last name");
+    TextField txtCompany = new TextField("Company","Please enter company");
+    TextField txtMobilePhone = new TextField("Mobile Phone","Please enter mobile phone");
+    TextField txtHomePhone = new TextField("Home Phone","Please enter home phone");
+    TextField txtJobPhone = new TextField("Job Phone","Please enter job phone");
+    TextField txtFaxPhone = new TextField("Fax Phone","Please enter fax phone");
 
     private final ContactService contactService;
     private final UserService userService;
 
     public NewContactView(ContactService contactService, UserService userService){
+
         this.contactService = contactService;
         this.userService = userService;
-
 
         binder.bind(txtFirstName,Contact::getFirstName,Contact::setFirstName);
         binder.bind(txtLastName,Contact::getLastName,Contact::setLastName);
         binder.bind(txtCompany,Contact::getCompany,Contact::setCompany);
-
-
-        Button btnSave = new Button("Save", VaadinIcon.INSERT.create());
-        Button btnCancel = new Button("Cancel");
-
+        binder.bind(txtMobilePhone,Contact::getMobilePhone,Contact::setMobilePhone);
+        binder.bind(txtHomePhone,Contact::getHomePhone,Contact::setHomePhone);
+        binder.bind(txtJobPhone,Contact::getJobPhone,Contact::setJobPhone);
+        binder.bind(txtFaxPhone,Contact::getFaxPhone,Contact::setFaxPhone);
 
         btnSave.addClickListener(buttonClickEvent -> {
             try {
@@ -51,7 +56,7 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
             } catch (ValidationException e) {
                 e.printStackTrace();
             }
-            contact.setId(itemIdForEdition);
+            contact.setId(contactID);
             contactService.save(contact);
 
             UI.getCurrent().getPage().setLocation("user/" + userID + "/contacts");
@@ -61,7 +66,7 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
             UI.getCurrent().getPage().setLocation("user/" + userID + "/contacts");
         });
 
-        add(txtFirstName, txtLastName, txtCompany, btnSave, btnCancel);
+        add(txtFirstName, txtLastName,txtCompany, txtMobilePhone,txtHomePhone,txtJobPhone,txtFaxPhone, btnSave, btnCancel);
 
     }
 

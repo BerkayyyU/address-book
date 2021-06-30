@@ -56,10 +56,14 @@ public class ContactServiceImpl implements ContactService{
     }
 
     @Override
-    public Contact update(Contact contact, String firstNames, String lastNames, String companys) {
-        contact.setFirstName(firstNames);
-        contact.setLastName(lastNames);
-        contact.setCompany(companys);
+    public Contact update(Contact contact, String firstName, String lastName, String company, String mobilePhone, String homePhone, String jobPhone, String faxPhone) {
+        contact.setFirstName(firstName);
+        contact.setLastName(lastName);
+        contact.setCompany(company);
+        contact.setMobilePhone(mobilePhone);
+        contact.setHomePhone(homePhone);
+        contact.setJobPhone(jobPhone);
+        contact.setFaxPhone(faxPhone);
 
         return contactRepository.save(contact);
     }

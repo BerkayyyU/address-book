@@ -20,6 +20,10 @@ public class Contact {
     private String firstName;
     private String lastName;
     private String company;
+    private String mobilePhone;
+    private String homePhone;
+    private String jobPhone;
+    private String faxPhone;
 
 
     @ManyToOne

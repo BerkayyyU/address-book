@@ -2,7 +2,7 @@ package com.example.application.services;
 
 import com.example.application.models.Contact;
 
-import java.util.Optional;
+
 import java.util.Set;
 
 public interface ContactService {
@@ -12,5 +12,5 @@ public interface ContactService {
     Set<Contact> getContactsByUserId(Long id);
     Contact getContactByIdAndUserId(Long contactID, Long userID);
     void delete(Contact contact);
-    Contact update(Contact contact, String firstName, String lastName, String company);
+    Contact update(Contact contact, String firstName, String lastName, String company, String mobilePhone, String homePhone, String jobPhone, String faxPhone);
 }

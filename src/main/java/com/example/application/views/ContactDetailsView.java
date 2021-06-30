@@ -7,6 +7,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.theme.Theme;
 
@@ -16,16 +17,23 @@ import com.vaadin.flow.theme.Theme;
 @Theme(themeFolder = "adresdefteri")
 public class ContactDetailsView extends VerticalLayout implements  BeforeEnterObserver{
 
+    private final ContactService contactService;
+
     private String contactID;
     private String userID;
 
-    private final ContactService contactService;
-
     Binder<Contact> binder = new Binder<>();
+
+    Button btnUpdate = new Button("Update");
+    Button btnDelete = new Button("Delete");
 
     TextField txtFirstName = new TextField("First Name");
     TextField txtLastName = new TextField("Last Name");
     TextField txtCompany = new TextField("Company");
+    TextField txtMobilePhone = new TextField("Mobile Phone");
+    TextField txtHomePhone = new TextField("Home Phone");
+    TextField txtJobPhone = new TextField("Job Phone");
+    TextField txtFaxPhone = new TextField("Fax Phone");
 
     public ContactDetailsView(ContactService contactService){
         this.contactService = contactService;
@@ -33,32 +41,25 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
         binder.bind(txtFirstName,Contact::getFirstName,Contact::setFirstName);
         binder.bind(txtLastName,Contact::getLastName,Contact::setLastName);
         binder.bind(txtCompany,Contact::getCompany,Contact::setCompany);
+        binder.bind(txtMobilePhone,Contact::getMobilePhone,Contact::setMobilePhone);
+        binder.bind(txtHomePhone,Contact::getHomePhone,Contact::setHomePhone);
+        binder.bind(txtJobPhone,Contact::getJobPhone,Contact::setJobPhone);
+        binder.bind(txtFaxPhone,Contact::getFaxPhone,Contact::setFaxPhone);
 
+        add(txtFirstName, txtLastName, txtCompany,txtMobilePhone,txtHomePhone,txtJobPhone,txtFaxPhone,btnUpdate,btnDelete);
     }
 
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
-        Button btnUpdate = new Button("Update");
-        Button btnDelete = new Button("Delete");
-
         contactID = beforeEnterEvent.getRouteParameters().get("contactID").get();
         userID = beforeEnterEvent.getRouteParameters().get("userID").get();
 
         Contact contact = contactService.getContactByIdAndUserId(Long.valueOf(contactID),Long.valueOf(userID));
 
-        txtFirstName.setValue(contact.getFirstName());
-        txtLastName.setValue(contact.getLastName());
-        txtCompany.setValue(contact.getCompany());
+        binder.readBean(contact);
 
         btnUpdate.addClickListener(buttonClickEvent -> {
-            String txtFirstNameValue = txtFirstName.getValue();
-            String txtLastNameValue = txtLastName.getValue();
-            String txtCompanyValue = txtCompany.getValue();
-
-
-            contactService.update(contact,txtFirstNameValue,txtLastNameValue,txtCompanyValue);
-
-
+            contactService.update(contact,txtFirstName.getValue(),txtLastName.getValue(),txtCompany.getValue(),txtMobilePhone.getValue(),txtHomePhone.getValue(),txtJobPhone.getValue(),txtFaxPhone.getValue());
             UI.getCurrent().getPage().setLocation("user/" + userID + "/contacts");
         });
 
@@ -67,7 +68,7 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
             UI.getCurrent().getPage().setLocation("user/" + userID + "/contacts");
         });
 
-        add(txtFirstName, txtLastName, txtCompany,btnUpdate,btnDelete);
-
     }
+
+
 }

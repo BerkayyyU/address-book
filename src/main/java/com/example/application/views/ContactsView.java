@@ -83,9 +83,15 @@ public class ContactsView extends VerticalLayout implements BeforeEnterObserver 
         grid.addColumn(Contact::getFirstName).setHeader("");
         grid.addColumn(Contact::getLastName).setHeader("");
         grid.removeColumnByKey("id");
+        grid.removeColumnByKey("user");
+        grid.removeColumnByKey("firstName");
         grid.removeColumnByKey("lastName");
         grid.removeColumnByKey("company");
-        grid.removeColumnByKey("firstName");
-        grid.removeColumnByKey("user");
+        grid.removeColumnByKey("mobilePhone");
+        grid.removeColumnByKey("homePhone");
+        grid.removeColumnByKey("jobPhone");
+        grid.removeColumnByKey("faxPhone");
+
+
     }
 }

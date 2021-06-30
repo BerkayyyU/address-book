@@ -37,6 +37,10 @@ public class bootstrapData implements CommandLineRunner {
         contact1.setFirstName("berkay");
         contact1.setLastName("Ulguel");
         contact1.setCompany("Galaksiya");
+        contact1.setMobilePhone("111");
+        contact1.setHomePhone("222");
+        contact1.setJobPhone("333");
+        contact1.setFaxPhone("444");
 
         contact1.setUser(user1);
         contactService.save(contact1);
@@ -45,6 +49,10 @@ public class bootstrapData implements CommandLineRunner {
         contact2.setFirstName("Mert");
         contact2.setLastName("Cakar");
         contact2.setCompany("SPSS");
+        contact2.setMobilePhone("999");
+        contact2.setHomePhone("888");
+        contact2.setJobPhone("777");
+        contact2.setFaxPhone("666");
 
         contact2.setUser(user1);
         contactService.save(contact2);
