@@ -60,12 +60,6 @@ public class ContactsView extends VerticalLayout implements BeforeEnterObserver 
 
     }
 
-    private void searchContacts(String filter){
-        List<Contact> contactListFiltered = new ArrayList<>();
-        contactListFiltered.addAll(contactService.getContacts(filter));
-        grid.setItems(contactListFiltered);
-    }
-
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
         userID = beforeEnterEvent.getRouteParameters().get("userID").get();
@@ -79,7 +73,13 @@ public class ContactsView extends VerticalLayout implements BeforeEnterObserver 
         }
     }
 
-    public void setGridColumns(){
+    private void searchContacts(String filter){
+        List<Contact> contactListFiltered = new ArrayList<>();
+        contactListFiltered.addAll(contactService.getContacts(filter));
+        grid.setItems(contactListFiltered);
+    }
+
+    private void setGridColumns(){
         grid.addColumn(Contact::getFirstName).setHeader("");
         grid.addColumn(Contact::getLastName).setHeader("");
         grid.removeColumnByKey("id");
@@ -94,7 +94,8 @@ public class ContactsView extends VerticalLayout implements BeforeEnterObserver 
         grid.removeColumnByKey("homeAddress");
         grid.removeColumnByKey("jobAddress");
         grid.removeColumnByKey("otherAddress");
-
+        grid.removeColumnByKey("facebook");
+        grid.removeColumnByKey("twitter");
 
     }
 }

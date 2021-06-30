@@ -36,6 +36,8 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
     TextField txtHomeAdress = new TextField("Home Address","Please enter home address");
     TextField txtJobAddress = new TextField("Job Address","Please enter job address");
     TextField txtOtherAddress = new TextField("Other Address","Please enter other address");
+    TextField txtFacebook = new TextField("Facebook","Please enter facebook");
+    TextField txtTwitter = new TextField("Twitter","PLease enter twitter");
 
     private final ContactService contactService;
     private final UserService userService;
@@ -45,16 +47,7 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
         this.contactService = contactService;
         this.userService = userService;
 
-        binder.bind(txtFirstName,Contact::getFirstName,Contact::setFirstName);
-        binder.bind(txtLastName,Contact::getLastName,Contact::setLastName);
-        binder.bind(txtCompany,Contact::getCompany,Contact::setCompany);
-        binder.bind(txtMobilePhone,Contact::getMobilePhone,Contact::setMobilePhone);
-        binder.bind(txtHomePhone,Contact::getHomePhone,Contact::setHomePhone);
-        binder.bind(txtJobPhone,Contact::getJobPhone,Contact::setJobPhone);
-        binder.bind(txtFaxPhone,Contact::getFaxPhone,Contact::setFaxPhone);
-        binder.bind(txtHomeAdress,Contact::getHomeAddress,Contact::setHomeAddress);
-        binder.bind(txtJobAddress,Contact::getJobAddress,Contact::setJobAddress);
-        binder.bind(txtOtherAddress,Contact::getOtherAddress,Contact::setOtherAddress);
+        binderBind();
 
         btnSave.addClickListener(buttonClickEvent -> {
             try {
@@ -72,7 +65,7 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
             UI.getCurrent().getPage().setLocation("user/" + userID + "/contacts");
         });
 
-        add(txtFirstName, txtLastName,txtCompany, txtMobilePhone,txtHomePhone,txtJobPhone,txtFaxPhone,txtHomeAdress,txtJobAddress,txtOtherAddress, btnSave, btnCancel);
+        add(txtFirstName, txtLastName,txtCompany, txtMobilePhone,txtHomePhone,txtJobPhone,txtFaxPhone,txtHomeAdress,txtJobAddress,txtOtherAddress,txtFacebook,txtTwitter, btnSave, btnCancel);
 
     }
 
@@ -82,6 +75,21 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
         User user = userService.getUserById(Long.valueOf(userID));
         contact.setUser(user);
 
+    }
+
+    private void binderBind(){
+        binder.bind(txtFirstName,Contact::getFirstName,Contact::setFirstName);
+        binder.bind(txtLastName,Contact::getLastName,Contact::setLastName);
+        binder.bind(txtCompany,Contact::getCompany,Contact::setCompany);
+        binder.bind(txtMobilePhone,Contact::getMobilePhone,Contact::setMobilePhone);
+        binder.bind(txtHomePhone,Contact::getHomePhone,Contact::setHomePhone);
+        binder.bind(txtJobPhone,Contact::getJobPhone,Contact::setJobPhone);
+        binder.bind(txtFaxPhone,Contact::getFaxPhone,Contact::setFaxPhone);
+        binder.bind(txtHomeAdress,Contact::getHomeAddress,Contact::setHomeAddress);
+        binder.bind(txtJobAddress,Contact::getJobAddress,Contact::setJobAddress);
+        binder.bind(txtOtherAddress,Contact::getOtherAddress,Contact::setOtherAddress);
+        binder.bind(txtFacebook,Contact::getFacebook,Contact::setFacebook);
+        binder.bind(txtTwitter,Contact::getTwitter,Contact::setTwitter);
     }
 
 

@@ -37,24 +37,16 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
     TextField txtHomeAdress = new TextField("Home Address");
     TextField txtJobAddress = new TextField("Job Address");
     TextField txtOtherAddress = new TextField("Other Address");
+    TextField txtFacebook = new TextField("Facebook");
+    TextField txtTwitter = new TextField("Twitter");
 
 
     public ContactDetailsView(ContactService contactService){
         this.contactService = contactService;
 
-        binder.bind(txtFirstName,Contact::getFirstName,Contact::setFirstName);
-        binder.bind(txtLastName,Contact::getLastName,Contact::setLastName);
-        binder.bind(txtCompany,Contact::getCompany,Contact::setCompany);
-        binder.bind(txtMobilePhone,Contact::getMobilePhone,Contact::setMobilePhone);
-        binder.bind(txtHomePhone,Contact::getHomePhone,Contact::setHomePhone);
-        binder.bind(txtJobPhone,Contact::getJobPhone,Contact::setJobPhone);
-        binder.bind(txtFaxPhone,Contact::getFaxPhone,Contact::setFaxPhone);
-        binder.bind(txtHomeAdress,Contact::getHomeAddress,Contact::setHomeAddress);
-        binder.bind(txtJobAddress,Contact::getJobAddress,Contact::setJobAddress);
-        binder.bind(txtOtherAddress,Contact::getOtherAddress,Contact::setOtherAddress);
+        binderBind();
 
-
-        add(txtFirstName, txtLastName, txtCompany,txtMobilePhone,txtHomePhone,txtJobPhone,txtFaxPhone,txtHomeAdress,txtJobAddress,txtOtherAddress,btnUpdate,btnDelete);
+        add(txtFirstName, txtLastName, txtCompany,txtMobilePhone,txtHomePhone,txtJobPhone,txtFaxPhone,txtHomeAdress,txtJobAddress,txtOtherAddress,txtFacebook,txtTwitter,btnUpdate,btnDelete);
     }
 
     @Override
@@ -67,7 +59,7 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
         binder.readBean(contact);
 
         btnUpdate.addClickListener(buttonClickEvent -> {
-            contactService.update(contact,txtFirstName.getValue(),txtLastName.getValue(),txtCompany.getValue(),txtMobilePhone.getValue(),txtHomePhone.getValue(),txtJobPhone.getValue(),txtFaxPhone.getValue(),txtHomeAdress.getValue(),txtJobAddress.getValue(),txtOtherAddress.getValue());
+            contactService.update(contact,txtFirstName.getValue(),txtLastName.getValue(),txtCompany.getValue(),txtMobilePhone.getValue(),txtHomePhone.getValue(),txtJobPhone.getValue(),txtFaxPhone.getValue(),txtHomeAdress.getValue(),txtJobAddress.getValue(),txtOtherAddress.getValue(),txtFacebook.getValue(),txtTwitter.getValue());
             UI.getCurrent().getPage().setLocation("user/" + userID + "/contacts");
         });
 
@@ -76,6 +68,21 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
             UI.getCurrent().getPage().setLocation("user/" + userID + "/contacts");
         });
 
+    }
+
+    private void binderBind(){
+        binder.bind(txtFirstName,Contact::getFirstName,Contact::setFirstName);
+        binder.bind(txtLastName,Contact::getLastName,Contact::setLastName);
+        binder.bind(txtCompany,Contact::getCompany,Contact::setCompany);
+        binder.bind(txtMobilePhone,Contact::getMobilePhone,Contact::setMobilePhone);
+        binder.bind(txtHomePhone,Contact::getHomePhone,Contact::setHomePhone);
+        binder.bind(txtJobPhone,Contact::getJobPhone,Contact::setJobPhone);
+        binder.bind(txtFaxPhone,Contact::getFaxPhone,Contact::setFaxPhone);
+        binder.bind(txtHomeAdress,Contact::getHomeAddress,Contact::setHomeAddress);
+        binder.bind(txtJobAddress,Contact::getJobAddress,Contact::setJobAddress);
+        binder.bind(txtOtherAddress,Contact::getOtherAddress,Contact::setOtherAddress);
+        binder.bind(txtFacebook,Contact::getFacebook,Contact::setFacebook);
+        binder.bind(txtTwitter,Contact::getTwitter,Contact::setTwitter);
     }
 
 

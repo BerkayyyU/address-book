@@ -27,7 +27,8 @@ public class Contact {
     private String homeAddress;
     private String jobAddress;
     private String otherAddress;
-
+    private String facebook;
+    private String twitter;
 
     @ManyToOne
     private User user;
