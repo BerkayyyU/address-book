@@ -1,0 +1,18 @@
+.vertical{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    overflow: hidden;
+}
+.first{
+    background-color: white;
+}
+/* background-color: rgb(44,44,46);*/
+input{
+    color: blue !important;
+    background-color: red !important;
+}
+[part="value"], [part="input-field"] ::slotted(input), [part="input-field"] ::slotted(textarea){
+    background-color: red !important;
+}

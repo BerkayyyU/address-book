@@ -4,6 +4,7 @@ import com.example.application.models.Contact;
 import com.example.application.services.ContactService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
@@ -14,7 +15,7 @@ import com.vaadin.flow.theme.Theme;
 
 
 @Route("user/:userID/contacts/:contactID/contact-details")
-@Theme(themeFolder = "adresdefteri")
+@CssImport("./styles/ContactDetailsView.css")
 public class ContactDetailsView extends VerticalLayout implements  BeforeEnterObserver{
 
     private final ContactService contactService;
@@ -40,13 +41,19 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
     TextField txtFacebook = new TextField("Facebook");
     TextField txtTwitter = new TextField("Twitter");
 
+    VerticalLayout verticalLayout = new VerticalLayout();
+
 
     public ContactDetailsView(ContactService contactService){
         this.contactService = contactService;
 
         binderBind();
 
-        add(txtFirstName, txtLastName, txtCompany,txtMobilePhone,txtHomePhone,txtJobPhone,txtFaxPhone,txtHomeAdress,txtJobAddress,txtOtherAddress,txtFacebook,txtTwitter,btnUpdate,btnDelete);
+        verticalLayout.setClassName("vertical");
+        txtFirstName.setClassName("first");
+
+        verticalLayout.add(txtFirstName, txtLastName, txtCompany,txtMobilePhone,txtHomePhone,txtJobPhone,txtFaxPhone,txtHomeAdress,txtJobAddress,txtOtherAddress,txtFacebook,txtTwitter,btnUpdate,btnDelete);
+        add(verticalLayout);
     }
 
     @Override

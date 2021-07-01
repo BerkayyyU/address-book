@@ -5,6 +5,7 @@ import com.example.application.services.ContactService;
 import com.example.application.services.UserService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -18,7 +19,7 @@ import java.util.List;
 import java.util.Set;
 
 @Route("user/:userID/contacts")
-@Theme(themeFolder = "adresdefteri")
+@CssImport("./styles/ContactsView.css")
 public class ContactsView extends VerticalLayout implements BeforeEnterObserver {
 
     String userID;
@@ -80,8 +81,8 @@ public class ContactsView extends VerticalLayout implements BeforeEnterObserver 
     }
 
     private void setGridColumns(){
-        grid.addColumn(Contact::getFirstName).setHeader("");
-        grid.addColumn(Contact::getLastName).setHeader("");
+        grid.addColumn(Contact::getFirstName).setHeader("").setWidth("5px").setClassNameGenerator(firstName -> "xd");
+        grid.addColumn(Contact::getLastName).setHeader("").setWidth("5px");
         grid.removeColumnByKey("id");
         grid.removeColumnByKey("user");
         grid.removeColumnByKey("firstName");
