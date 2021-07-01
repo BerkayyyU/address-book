@@ -6,6 +6,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
@@ -15,8 +16,8 @@ public class SignInView extends VerticalLayout {
 
     private final UserService userService;
 
-    TextField txtName = new TextField();
-    TextField txtEmail = new TextField();
+    TextField username = new TextField();
+    EmailField email = new EmailField();
     PasswordField password = new PasswordField();
     PasswordField passwordCheck = new PasswordField();
 
@@ -25,16 +26,16 @@ public class SignInView extends VerticalLayout {
     public SignInView(UserService userService){
         this.userService = userService;
 
-        txtName.setLabel("Ad giriniz: ");
-        txtEmail.setLabel("Email giriniz:");
+        username.setLabel("Ad giriniz: ");
+        email.setLabel("Email giriniz:");
         password.setLabel("Şifre giriniz: ");
         passwordCheck.setLabel("Şifreyi tekrardan giriniz: ");
 
         btnSignIn.addClickListener(buttonClickEvent -> {
             if(password.getPattern()==passwordCheck.getPattern()){
                 User newUser = new User();
-                newUser.setEmail(txtEmail.getValue());
-                newUser.setName(txtName.getValue());
+                newUser.setEmail(email.getValue());
+                newUser.setName(username.getValue());
                 newUser.setPassword(password.getValue());
                 userService.save(newUser);
                 UI.getCurrent().getPage().setLocation("/");
@@ -44,6 +45,6 @@ public class SignInView extends VerticalLayout {
 
         });
 
-        add(txtName,txtEmail,password,passwordCheck,btnSignIn);
+        add(username,email,password,passwordCheck,btnSignIn);
     }
 }

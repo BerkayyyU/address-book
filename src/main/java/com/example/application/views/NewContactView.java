@@ -6,8 +6,14 @@ import com.example.application.services.ContactService;
 import com.example.application.services.UserService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
@@ -23,21 +29,58 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
 
     Contact contact = new Contact();
 
-    Button btnSave = new Button("Save", VaadinIcon.INSERT.create());
-    Button btnCancel = new Button("Cancel");
+    Button btnSave = new Button("Kaydet", VaadinIcon.INSERT.create());
+    Button btnCancel = new Button("İptal");
 
-    TextField txtFirstName = new TextField("First Name", "Please enter first name");
-    TextField txtLastName = new TextField("Last Name","Please enter last name");
-    TextField txtCompany = new TextField("Company","Please enter company");
-    TextField txtMobilePhone = new TextField("Mobile Phone","Please enter mobile phone");
-    TextField txtHomePhone = new TextField("Home Phone","Please enter home phone");
-    TextField txtJobPhone = new TextField("Job Phone","Please enter job phone");
-    TextField txtFaxPhone = new TextField("Fax Phone","Please enter fax phone");
-    TextField txtHomeAdress = new TextField("Home Address","Please enter home address");
-    TextField txtJobAddress = new TextField("Job Address","Please enter job address");
-    TextField txtOtherAddress = new TextField("Other Address","Please enter other address");
-    TextField txtFacebook = new TextField("Facebook","Please enter facebook");
-    TextField txtTwitter = new TextField("Twitter","PLease enter twitter");
+    Div mainDiv = new Div();
+
+    Icon userIcon = new Icon(VaadinIcon.USER);
+
+    Div divFirstName = new Div();
+    Div divLastName = new Div();
+    Div divCompany = new Div();
+    Div divMobilePhone = new Div();
+    Div divHomePhone = new Div();
+    Div divJobPhone = new Div();
+    Div divFaxPhone = new Div();
+    Div divHomeAddress = new Div();
+    Div divJobAdress = new Div();
+    Div divOtherAddress = new Div();
+    Div divFacebook = new Div();
+    Div divTwitter = new Div();
+
+    Label lblFirstName = new Label("Ad:");
+    Label lblLastName = new Label("Soyad:");
+    Label lblCompany = new Label("Şirket:");
+    Label lblMobilePhone = new Label("Mobil:");
+    Label lblHomePhone = new Label("Ev:");
+    Label lblJobPhone = new Label("İş:");
+    Label lblFaxPhone = new Label("Fax:");
+    Label lblHomeAddress = new Label("Ev:");
+    Label lblJobAddress = new Label("İş:");
+    Label lblOtherAddress = new Label("Diğer:");
+    Label lblFacebook = new Label("Facebook:");
+    Label lblTwitter = new Label("Twitter:");
+
+    Label adres = new Label("Adres");
+    Label telefon = new Label("Telefon");
+    Label sosyalMedya = new Label("Sosyal Medya");
+
+    TextField firstName = new TextField( );
+    TextField lastName = new TextField();
+    TextField company = new TextField();
+    TextField mobilePhone = new TextField();
+    TextField homePhone = new TextField();
+    TextField jobPhone = new TextField();
+    TextField faxPhone = new TextField();
+    TextArea homeAdress = new TextArea();
+    TextArea jobAddress = new TextArea();
+    TextArea otherAddress = new TextArea();
+    TextField facebook = new TextField();
+    TextField twitter = new TextField();
+
+    VerticalLayout verticalLayout = new VerticalLayout();
+    HorizontalLayout horizontalLayout = new HorizontalLayout();
 
     private final ContactService contactService;
     private final UserService userService;
@@ -61,11 +104,37 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
             UI.getCurrent().getPage().setLocation("user/" + userID + "/contacts");
         });
 
+        verticalLayout.setClassName("vertical");
+        userIcon.setSize("100px");
+
+
+        btnCancel.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        btnSave.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
+
+        adres.setClassName("headerke");
+        telefon.setClassName("headerke");
+        sosyalMedya.setClassName("headerke");
+        userIcon.setClassName("user-icon");
+
+        mainDiv.setClassName("main");
+
+        divAdd();
+
+        for (Label label : new Label[]{lblFirstName,lblLastName,lblCompany,lblMobilePhone,lblHomePhone,lblJobPhone,lblFaxPhone,lblHomeAddress,lblJobAddress,lblOtherAddress,lblFacebook,lblTwitter}) {
+            label.setClassName("labels");
+        }
+        for (Div div : new Div[]{divFirstName,divLastName,divCompany,divMobilePhone,divHomePhone,divJobPhone,divFaxPhone,divHomeAddress,divJobAdress,divOtherAddress,divFacebook,divTwitter}) {
+            div.setClassName("divs");
+        }
+
         btnCancel.addClickListener(buttonClickEvent -> {
             UI.getCurrent().getPage().setLocation("user/" + userID + "/contacts");
         });
 
-        add(txtFirstName, txtLastName,txtCompany, txtMobilePhone,txtHomePhone,txtJobPhone,txtFaxPhone,txtHomeAdress,txtJobAddress,txtOtherAddress,txtFacebook,txtTwitter, btnSave, btnCancel);
+        horizontalLayout.add(btnCancel,btnSave);
+        verticalLayout.add(userIcon,divFirstName,divLastName,divCompany,telefon,divMobilePhone,divHomePhone,divJobPhone,divFaxPhone,adres,divHomeAddress,divJobAdress,divOtherAddress,sosyalMedya,divFacebook,divTwitter,horizontalLayout);
+        mainDiv.add(verticalLayout);
+        add(mainDiv);
 
     }
 
@@ -78,18 +147,33 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
     }
 
     private void binderBind(){
-        binder.bind(txtFirstName,Contact::getFirstName,Contact::setFirstName);
-        binder.bind(txtLastName,Contact::getLastName,Contact::setLastName);
-        binder.bind(txtCompany,Contact::getCompany,Contact::setCompany);
-        binder.bind(txtMobilePhone,Contact::getMobilePhone,Contact::setMobilePhone);
-        binder.bind(txtHomePhone,Contact::getHomePhone,Contact::setHomePhone);
-        binder.bind(txtJobPhone,Contact::getJobPhone,Contact::setJobPhone);
-        binder.bind(txtFaxPhone,Contact::getFaxPhone,Contact::setFaxPhone);
-        binder.bind(txtHomeAdress,Contact::getHomeAddress,Contact::setHomeAddress);
-        binder.bind(txtJobAddress,Contact::getJobAddress,Contact::setJobAddress);
-        binder.bind(txtOtherAddress,Contact::getOtherAddress,Contact::setOtherAddress);
-        binder.bind(txtFacebook,Contact::getFacebook,Contact::setFacebook);
-        binder.bind(txtTwitter,Contact::getTwitter,Contact::setTwitter);
+        binder.bind(firstName,Contact::getFirstName,Contact::setFirstName);
+        binder.bind(lastName,Contact::getLastName,Contact::setLastName);
+        binder.bind(company,Contact::getCompany,Contact::setCompany);
+        binder.bind(mobilePhone,Contact::getMobilePhone,Contact::setMobilePhone);
+        binder.bind(homePhone,Contact::getHomePhone,Contact::setHomePhone);
+        binder.bind(jobPhone,Contact::getJobPhone,Contact::setJobPhone);
+        binder.bind(faxPhone,Contact::getFaxPhone,Contact::setFaxPhone);
+        binder.bind(homeAdress,Contact::getHomeAddress,Contact::setHomeAddress);
+        binder.bind(jobAddress,Contact::getJobAddress,Contact::setJobAddress);
+        binder.bind(otherAddress,Contact::getOtherAddress,Contact::setOtherAddress);
+        binder.bind(facebook,Contact::getFacebook,Contact::setFacebook);
+        binder.bind(twitter,Contact::getTwitter,Contact::setTwitter);
+    }
+
+    private void divAdd(){
+        divFirstName.add(lblFirstName,firstName);
+        divLastName.add(lblLastName,lastName);
+        divCompany.add(lblCompany,company);
+        divMobilePhone.add(lblMobilePhone,mobilePhone);
+        divHomePhone.add(lblHomePhone,homePhone);
+        divJobPhone.add(lblJobPhone,jobPhone);
+        divFaxPhone.add(lblFaxPhone,faxPhone);
+        divHomeAddress.add(lblHomeAddress,homeAdress);
+        divJobAdress.add(lblJobAddress,jobAddress);
+        divOtherAddress.add(lblOtherAddress,otherAddress);
+        divFacebook.add(lblFacebook,facebook);
+        divTwitter.add(lblTwitter,twitter);
     }
 
 

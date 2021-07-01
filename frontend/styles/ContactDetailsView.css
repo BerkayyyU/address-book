@@ -16,3 +16,46 @@ input{
 [part="value"], [part="input-field"] ::slotted(input), [part="input-field"] ::slotted(textarea){
     background-color: red !important;
 }
+.vaadin-text-field-container {
+    flex-direction: row;
+}
+
+[part="label"] {
+    flex: none;
+}
+
+.divs{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+:host{
+    display: none !important;
+}
+.labels{
+    width: 80px;
+    margin-right: 20px;
+}
+.headerke{
+    margin-top: 50px;
+    margin-left: 80px;
+    font-size: 24px;
+    font-weight: bold;
+}
+.user-icon{
+    margin-left: 120px;
+}
+.main{
+    padding: 30px;
+    background-color: rgb(26, 26, 26);
+    margin-top: 100px;
+    margin-left: 750px;
+}
+.textfield-textarea-width{
+    width: 250px;
+}
+.horizontal{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}

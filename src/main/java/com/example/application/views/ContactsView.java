@@ -4,14 +4,16 @@ import com.example.application.models.Contact;
 import com.example.application.services.ContactService;
 import com.example.application.services.UserService;
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
-import com.vaadin.flow.theme.Theme;
+
 
 
 import java.util.ArrayList;
@@ -25,7 +27,13 @@ public class ContactsView extends VerticalLayout implements BeforeEnterObserver 
     String userID;
     String contactID;
 
-    TextField txtSearch = new TextField();
+    TextField search = new TextField("","Ara");
+    Icon iconAdd = new Icon(VaadinIcon.PLUS);
+
+    Div mainDiv = new Div();
+
+    HorizontalLayout horizontalLayout = new HorizontalLayout();
+
 
     Grid<Contact> grid = new Grid<>(Contact.class);
 
@@ -38,26 +46,33 @@ public class ContactsView extends VerticalLayout implements BeforeEnterObserver 
         this.contactService= contactService;
         this.userService = userService;
 
-        Button btnNew = new Button("Add", VaadinIcon.INSERT.create());
 
-        btnNew.addClickListener(buttonClickEvent -> {
+
+
+
+        iconAdd.addClickListener(iconClickEvent -> {
             UI.getCurrent().getPage().setLocation("user/"+ userID + "/contacts/new-contact");
         });
 
         grid.setClassName("gridke");
         grid.setHeight("300px");
         grid.setWidth("200px");
+        search.setWidth("150px");
+        mainDiv.setClassName("main");
+        horizontalLayout.add(search, iconAdd);
+
 
         grid.addItemClickListener(contactItemClickEvent -> {
              contactID = String.valueOf(contactItemClickEvent.getItem().getId());
             UI.getCurrent().getPage().setLocation("user/" + userID + "/contacts/" + contactID + "/contact-details");
         });
 
-        txtSearch.addValueChangeListener(textFieldStringComponentValueChangeEvent -> {
-            searchContacts(txtSearch.getValue());
+        search.addValueChangeListener(textFieldStringComponentValueChangeEvent -> {
+            searchContacts(search.getValue());
         });
 
-        add(grid,btnNew,txtSearch);
+        mainDiv.add(horizontalLayout,grid);
+        add(mainDiv);
 
     }
 

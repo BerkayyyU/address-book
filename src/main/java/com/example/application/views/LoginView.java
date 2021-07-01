@@ -7,9 +7,13 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
@@ -25,10 +29,13 @@ public class LoginView extends VerticalLayout {
 
     private final UserService userService;
 
-    TextField txtEmail = new TextField();
+    EmailField email = new EmailField();
     PasswordField password = new PasswordField();
 
+    Div mainDiv = new Div();
+
     Button btnLogin = new Button("Giriş yap");
+    Image img = new Image();
 
 
     Div div = new Div();
@@ -36,16 +43,18 @@ public class LoginView extends VerticalLayout {
     public LoginView(UserService userService){
         this.userService = userService;
 
-        txtEmail.setLabel("Email giriniz:");
+        email.setLabel("Email giriniz:");
         password.setLabel("Şifre giriniz:");
-        div.setClassName("div");
+
 
         VerticalLayout verticalLayout = new VerticalLayout();
-        verticalLayout.setClassName("div");
-        div.setClassName("header");
+
+        mainDiv.setClassName("main");
+
+
 
         Anchor anchor = new Anchor("/signin","Dont have an account?");
-        verticalLayout.add(txtEmail,password,btnLogin,anchor);
+        verticalLayout.add(email,password,btnLogin,anchor);
 
 
         /*byte[] imageBytes;
@@ -55,7 +64,7 @@ public class LoginView extends VerticalLayout {
 
 
         btnLogin.addClickListener(buttonClickEvent -> {
-            User result = userService.login(txtEmail.getValue(),password.getValue());
+            User result = userService.login(email.getValue(),password.getValue());
             if(result.getId()!=null){
                 UI.getCurrent().getPage().setLocation("user/"+ result.getId()+ "/contacts");
             }else{
@@ -63,7 +72,8 @@ public class LoginView extends VerticalLayout {
             }
         });
 
-        add(div,verticalLayout);
+        mainDiv.add(verticalLayout);
+        add(mainDiv);
 
     }
 }
