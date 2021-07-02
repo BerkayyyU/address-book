@@ -18,7 +18,6 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.*;
 
 
-
 @Route("user/:userID/contacts/:contactID/contact-details")
 @CssImport("./styles/ContactDetailsView.css")
 public class ContactDetailsView extends VerticalLayout implements  BeforeEnterObserver{

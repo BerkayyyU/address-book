@@ -4,9 +4,46 @@
     justify-content: center;
     overflow: hidden;
 }
+/*CONTACTS VIEW*/
+.contacts-view{
+    padding: 70px;
+    background-color: rgb(26, 26, 26);
+    margin-top: 100px;
+    margin-left: 750px;
+}
+.username-logout{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+.username{
+    font-size: 30px;
+    font-style: italic;
+    font-weight: bold;
+}
+.search-add{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 40px;
+}
+.search{
+    width: 250px;
+}
+.icon-add{
+    color: rgb(0, 204, 102);
+    cursor: pointer;
+}
+.contacts-grid{
+    height: 400px;
+    width: 300px;
+    margin-top: 30px;
+}
+/*CONTACTS VIEW*/
 
-
-/*CONTACT-DETAILS*/
+/*CONTACT DETAILS AND NEW CONTACT VIEW*/
 .contactdetails-newcontact-view{
     padding: 30px;
     background-color: rgb(26, 26, 26);
@@ -25,6 +62,9 @@
 .labels{
     width: 80px;
     margin-right: 20px;
+}
+.textfield-textarea-width{
+    width: 250px;
 }
 .telefon-adres-sosyalmedya-header{
     margin-top: 50px;
@@ -45,11 +85,12 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
 }
 .update-save-button{
     margin-left: 185px;
 }
-/*CONTACT-DETAILS*/
+/*CONTACT DETAILS AND NEW CONTACT VIEW*/
 
 
 /* LOGIN AND SIGN IN VIEW */
@@ -81,14 +122,3 @@
 }
 /* LOGIN AND SIGN IN VIEW */
 
-
-.textfield-textarea-width{
-    width: 250px;
-}
-
-.search-add{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-}
