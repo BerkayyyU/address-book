@@ -17,11 +17,11 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User login(String email, String password) {
-        List<User> result = userRepository.findByEmailAndPassword(email, password);
-        if (result.size()==0){
+        List<User> user = userRepository.findByEmailAndPassword(email, password);
+        if (user.size()==0){
             return new User();
         }
-        return  result.get(0);
+        return  user.get(0);
     }
 
     @Override

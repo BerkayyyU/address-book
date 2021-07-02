@@ -2,11 +2,9 @@ package com.example.application.services;
 
 import com.example.application.models.Contact;
 
-
 import java.util.Set;
 
 public interface ContactService {
-    Set<Contact> getContacts();
     Set<Contact> getContacts(String filter);
     Contact  save(Contact contact);
     Set<Contact> getContactsByUserId(Long id);

@@ -39,7 +39,6 @@ public class ContactsView extends VerticalLayout implements BeforeEnterObserver 
     Div searchAndAdd = new Div();
     Div usernameAndLogOut = new Div();
 
-    HorizontalLayout horizontalLayout = new HorizontalLayout();
 
     Grid<Contact> grid = new Grid<>(Contact.class);
 
