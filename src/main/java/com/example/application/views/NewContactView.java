@@ -24,17 +24,16 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
 
     String userID;
     Long contactID=0L;
-
     Binder<Contact> binder = new Binder<>();
-
     Contact contact = new Contact();
 
-    Button btnSave = new Button("Kaydet", VaadinIcon.INSERT.create());
+    Button btnSave = new Button("Kaydet");
     Button btnCancel = new Button("İptal");
 
-    Div mainDiv = new Div();
+    Div newContactDiv = new Div();
 
     Icon userIcon = new Icon(VaadinIcon.USER);
+    Icon backIcon = new Icon(VaadinIcon.ARROW_LEFT);
 
     Div divFirstName = new Div();
     Div divLastName = new Div();
@@ -92,6 +91,49 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
 
         binderBind();
 
+
+
+        btnCancel.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        btnSave.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
+
+        newContactDiv.setClassName("contactdetails-newcontact-view");
+        verticalLayout.setClassName("vertical");
+        backIcon.setSize("30px");
+        backIcon.getStyle().set("cursor", "pointer");
+        userIcon.setClassName("user-icon");
+        userIcon.setSize("150px");
+        adres.setClassName("telefon-adres-sosyalmedya-header");
+        adres.addClassName("adres-header");
+        telefon.setClassName("telefon-adres-sosyalmedya-header");
+        telefon.addClassName("telefon-header");
+        sosyalMedya.setClassName("telefon-adres-sosyalmedya-header");
+        sosyalMedya.addClassName("sosyalmedya-header");
+        horizontalLayout.setClassName("horizontal");
+        btnSave.setClassName("update-save-button");
+
+        divAdd();
+
+        for (Label label : new Label[]{lblFirstName,lblLastName,lblCompany,lblMobilePhone,lblHomePhone,lblJobPhone,lblFaxPhone,lblHomeAddress,lblJobAddress,lblOtherAddress,lblFacebook,lblTwitter}) {
+            label.setClassName("labels");
+        }
+        for (Div div : new Div[]{divFirstName,divLastName,divCompany,divMobilePhone,divHomePhone,divJobPhone,divFaxPhone,divHomeAddress,divJobAdress,divOtherAddress,divFacebook,divTwitter}) {
+            div.setClassName("divs");
+        }
+        for (TextField textField : new TextField[]{firstName,lastName,company,mobilePhone,homePhone,jobPhone,faxPhone,facebook,twitter}) {
+            textField.setClassName("textfield-textarea-width");
+        }
+        for (TextArea textArea : new TextArea[]{homeAdress,jobAddress,otherAddress}) {
+            textArea.setClassName("textfield-textarea-width");
+        }
+
+        backIcon.addClickListener(iconClickEvent -> {
+            UI.getCurrent().getPage().setLocation("user/" + userID + "/contacts");
+        });
+
+        btnCancel.addClickListener(buttonClickEvent -> {
+            UI.getCurrent().getPage().setLocation("user/" + userID + "/contacts");
+        });
+
         btnSave.addClickListener(buttonClickEvent -> {
             try {
                 binder.writeBean(contact);
@@ -104,37 +146,10 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
             UI.getCurrent().getPage().setLocation("user/" + userID + "/contacts");
         });
 
-        verticalLayout.setClassName("vertical");
-        userIcon.setSize("100px");
-
-
-        btnCancel.addThemeVariants(ButtonVariant.LUMO_ERROR);
-        btnSave.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
-
-        adres.setClassName("headerke");
-        telefon.setClassName("headerke");
-        sosyalMedya.setClassName("headerke");
-        userIcon.setClassName("user-icon");
-
-        mainDiv.setClassName("main");
-
-        divAdd();
-
-        for (Label label : new Label[]{lblFirstName,lblLastName,lblCompany,lblMobilePhone,lblHomePhone,lblJobPhone,lblFaxPhone,lblHomeAddress,lblJobAddress,lblOtherAddress,lblFacebook,lblTwitter}) {
-            label.setClassName("labels");
-        }
-        for (Div div : new Div[]{divFirstName,divLastName,divCompany,divMobilePhone,divHomePhone,divJobPhone,divFaxPhone,divHomeAddress,divJobAdress,divOtherAddress,divFacebook,divTwitter}) {
-            div.setClassName("divs");
-        }
-
-        btnCancel.addClickListener(buttonClickEvent -> {
-            UI.getCurrent().getPage().setLocation("user/" + userID + "/contacts");
-        });
-
         horizontalLayout.add(btnCancel,btnSave);
-        verticalLayout.add(userIcon,divFirstName,divLastName,divCompany,telefon,divMobilePhone,divHomePhone,divJobPhone,divFaxPhone,adres,divHomeAddress,divJobAdress,divOtherAddress,sosyalMedya,divFacebook,divTwitter,horizontalLayout);
-        mainDiv.add(verticalLayout);
-        add(mainDiv);
+        verticalLayout.add(backIcon,userIcon,divFirstName,divLastName,divCompany,telefon,divMobilePhone,divHomePhone,divJobPhone,divFaxPhone,adres,divHomeAddress,divJobAdress,divOtherAddress,sosyalMedya,divFacebook,divTwitter,horizontalLayout);
+        newContactDiv.add(verticalLayout);
+        add(newContactDiv);
 
     }
 

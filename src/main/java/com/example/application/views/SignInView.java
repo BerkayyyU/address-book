@@ -4,6 +4,9 @@ import com.example.application.models.User;
 import com.example.application.services.UserService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
@@ -16,35 +19,48 @@ public class SignInView extends VerticalLayout {
 
     private final UserService userService;
 
-    TextField username = new TextField();
-    EmailField email = new EmailField();
-    PasswordField password = new PasswordField();
-    PasswordField passwordCheck = new PasswordField();
-
+    Div signInDiv = new Div();
+    Label adresDefteri = new Label("Adres Defteri");
+    VerticalLayout verticalLayout = new VerticalLayout();
+    TextField username = new TextField("Kullanıcı adı:");
+    EmailField email = new EmailField("Email:");
+    PasswordField password = new PasswordField("Şifre:");
     Button btnSignIn = new Button("Kayıt Ol");
 
     public SignInView(UserService userService){
         this.userService = userService;
 
-        username.setLabel("Ad giriniz: ");
-        email.setLabel("Email giriniz:");
-        password.setLabel("Şifre giriniz: ");
-        passwordCheck.setLabel("Şifreyi tekrardan giriniz: ");
+        btnSignIn.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
+        signInDiv.setClassName("signin-login-view");
+        adresDefteri.setClassName("adres-defteri-header");
+        username.setClassName("user-info-textfields");
+        email.setClassName("user-info-textfields");
+        password.setClassName("user-info-textfields");
+        btnSignIn.setClassName("login-signin");
 
         btnSignIn.addClickListener(buttonClickEvent -> {
-            if(password.getPattern()==passwordCheck.getPattern()){
+            if(username.getValue().equals("")){
+                Notification.show("Lütfen kullanıcı adı giriniz!");
+            }
+            if(email.getValue().equals("")){
+                Notification.show("Lütfen email giriniz!");
+            }
+            if(password.getValue().equals("")){
+                Notification.show("Lütfen şifre giriniz!");
+            }
+            else{
                 User newUser = new User();
                 newUser.setEmail(email.getValue());
                 newUser.setName(username.getValue());
                 newUser.setPassword(password.getValue());
                 userService.save(newUser);
                 UI.getCurrent().getPage().setLocation("/");
-            }else{
-                Notification.show("Şifreler eşleşmiyor");
             }
-
         });
 
-        add(username,email,password,passwordCheck,btnSignIn);
+        verticalLayout.add(username,email,password,btnSignIn);
+        signInDiv.add(verticalLayout);
+        add(adresDefteri,signInDiv);
+
     }
 }

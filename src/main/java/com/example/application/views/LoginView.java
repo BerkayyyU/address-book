@@ -4,6 +4,7 @@ import com.example.application.models.User;
 import com.example.application.services.UserService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
@@ -29,51 +30,38 @@ public class LoginView extends VerticalLayout {
 
     private final UserService userService;
 
-    EmailField email = new EmailField();
-    PasswordField password = new PasswordField();
-
-    Div mainDiv = new Div();
-
+    Div loginDiv = new Div();
+    Label adresDefteri = new Label("Adres Defteri");
+    VerticalLayout verticalLayout = new VerticalLayout();
+    EmailField email = new EmailField("Email giriniz:");
+    PasswordField password = new PasswordField("Şifre giriniz:");
     Button btnLogin = new Button("Giriş yap");
-    Image img = new Image();
-
-
-    Div div = new Div();
+    Anchor anchor = new Anchor("/signin","Hesabınız yok mu?");
+    //Image img = new Image();
 
     public LoginView(UserService userService){
         this.userService = userService;
 
-        email.setLabel("Email giriniz:");
-        password.setLabel("Şifre giriniz:");
+        btnLogin.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
 
-
-        VerticalLayout verticalLayout = new VerticalLayout();
-
-        mainDiv.setClassName("main");
-
-
-
-        Anchor anchor = new Anchor("/signin","Dont have an account?");
-        verticalLayout.add(email,password,btnLogin,anchor);
-
-
-        /*byte[] imageBytes;
-        StreamResource resource = new StreamResource("fakeImageName.jpg", () -> new ByteArrayInputStream(imageBytes));
-        Image image = new Image(resource, "alternative image text");
-        Image img2 = new Image("images/NewYorkBne.jpeg","wow");*/
-
+        loginDiv.setClassName("signin-login-view");
+        adresDefteri.setClassName("adres-defteri-header");
+        email.setClassName("user-info-textfields");
+        password.setClassName("user-info-textfields");
+        btnLogin.setClassName("login-signin");
+        anchor.setClassName("anchor");
 
         btnLogin.addClickListener(buttonClickEvent -> {
-            User result = userService.login(email.getValue(),password.getValue());
-            if(result.getId()!=null){
-                UI.getCurrent().getPage().setLocation("user/"+ result.getId()+ "/contacts");
+            User user = userService.login(email.getValue(),password.getValue());
+            if(user.getId()!=null){
+                UI.getCurrent().getPage().setLocation("user/"+ user.getId()+ "/contacts");
             }else{
                 Notification.show("Hatalı giriş!");
             }
         });
 
-        mainDiv.add(verticalLayout);
-        add(mainDiv);
-
+        verticalLayout.add(email,password,btnLogin,anchor);
+        loginDiv.add(verticalLayout);
+        add(adresDefteri,loginDiv);
     }
 }

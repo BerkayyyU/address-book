@@ -2,60 +2,93 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-
     overflow: hidden;
 }
-.first{
-    background-color: white;
-}
-/* background-color: rgb(44,44,46);*/
-input{
-    color: blue !important;
-    background-color: red !important;
-}
-[part="value"], [part="input-field"] ::slotted(input), [part="input-field"] ::slotted(textarea){
-    background-color: red !important;
-}
-.vaadin-text-field-container {
-    flex-direction: row;
-}
 
-[part="label"] {
-    flex: none;
-}
 
-.divs{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-:host{
-    display: none !important;
-}
-.labels{
-    width: 80px;
-    margin-right: 20px;
-}
-.headerke{
-    margin-top: 50px;
-    margin-left: 80px;
-    font-size: 24px;
-    font-weight: bold;
-}
-.user-icon{
-    margin-left: 120px;
-}
-.main{
+/*CONTACT-DETAILS*/
+.contactdetails-newcontact-view{
     padding: 30px;
     background-color: rgb(26, 26, 26);
     margin-top: 100px;
     margin-left: 750px;
 }
-.textfield-textarea-width{
-    width: 250px;
+.user-icon{
+    margin-left: 150px;
+    margin-bottom: 30px;
+}
+.divs{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.labels{
+    width: 80px;
+    margin-right: 20px;
+}
+.telefon-adres-sosyalmedya-header{
+    margin-top: 50px;
+    font-size: 30px;
+    font-weight: bold;
+}
+.adres-header{
+    margin-left: 185px;
+}
+.telefon-header{
+    margin-left: 165px;
+}
+.sosyalmedya-header{
+    margin-left: 130px;
 }
 .horizontal{
+    margin-top: 40px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+}
+.update-save-button{
+    margin-left: 185px;
+}
+/*CONTACT-DETAILS*/
+
+
+/* LOGIN AND SIGN IN VIEW */
+.signin-login-view{
+    padding: 40px;
+    background-color: rgb(26, 26, 26);
+    margin-top: 50px;
+    margin-left: 750px;
+}
+.adres-defteri-header{
+    font-size: 72px;
+    font-weight: bold;
+    font-style: italic;
+    margin-top: 100px;
+    margin-left: 710px;
+}
+.user-info-textfields{
+    width: 250px;
+}
+.login-signin{
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    margin-left: 80px;
+}
+.anchor{
+    margin-top: 30px;
+    margin-left: 120px;
+}
+/* LOGIN AND SIGN IN VIEW */
+
+
+.textfield-textarea-width{
+    width: 250px;
+}
+
+.search-add{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
 }

@@ -31,6 +31,7 @@ public class ContactsView extends VerticalLayout implements BeforeEnterObserver 
     Icon iconAdd = new Icon(VaadinIcon.PLUS);
 
     Div mainDiv = new Div();
+    Div searchAndAdd = new Div();
 
     HorizontalLayout horizontalLayout = new HorizontalLayout();
 
@@ -46,32 +47,31 @@ public class ContactsView extends VerticalLayout implements BeforeEnterObserver 
         this.contactService= contactService;
         this.userService = userService;
 
+        grid.setHeight("300px");
+        grid.setWidth("202px");
+        iconAdd.setColor("green");
+        iconAdd.getStyle().set("cursor", "pointer");
+        search.setWidth("150px");
+        searchAndAdd.setClassName("search-add");
+        mainDiv.setClassName("main");
+        searchAndAdd.add(search, iconAdd);
 
-
-
+        search.addValueChangeListener(textFieldStringComponentValueChangeEvent -> {
+            searchContacts(search.getValue());
+        });
 
         iconAdd.addClickListener(iconClickEvent -> {
             UI.getCurrent().getPage().setLocation("user/"+ userID + "/contacts/new-contact");
         });
-
-        grid.setClassName("gridke");
-        grid.setHeight("300px");
-        grid.setWidth("200px");
-        search.setWidth("150px");
-        mainDiv.setClassName("main");
-        horizontalLayout.add(search, iconAdd);
-
 
         grid.addItemClickListener(contactItemClickEvent -> {
              contactID = String.valueOf(contactItemClickEvent.getItem().getId());
             UI.getCurrent().getPage().setLocation("user/" + userID + "/contacts/" + contactID + "/contact-details");
         });
 
-        search.addValueChangeListener(textFieldStringComponentValueChangeEvent -> {
-            searchContacts(search.getValue());
-        });
 
-        mainDiv.add(horizontalLayout,grid);
+
+        mainDiv.add(searchAndAdd,grid);
         add(mainDiv);
 
     }
@@ -96,8 +96,8 @@ public class ContactsView extends VerticalLayout implements BeforeEnterObserver 
     }
 
     private void setGridColumns(){
-        grid.addColumn(Contact::getFirstName).setHeader("").setWidth("5px").setClassNameGenerator(firstName -> "xd");
-        grid.addColumn(Contact::getLastName).setHeader("").setWidth("5px");
+        grid.addColumn(Contact::getFirstName).setHeader("");
+        grid.addColumn(Contact::getLastName).setHeader("");
         grid.removeColumnByKey("id");
         grid.removeColumnByKey("user");
         grid.removeColumnByKey("firstName");

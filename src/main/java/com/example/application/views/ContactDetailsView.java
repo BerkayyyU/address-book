@@ -27,14 +27,15 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
 
     private String contactID;
     private String userID;
-
     Binder<Contact> binder = new Binder<>();
 
-    Button btnUpdate = new Button("Güncelle");
-    Button btnDelete = new Button("Sil");
-    Icon userIcon = new Icon(VaadinIcon.USER);
+    Div contactDetailsDiv = new Div();
 
-    Div mainDiv = new Div();
+    VerticalLayout verticalLayout = new VerticalLayout();
+    HorizontalLayout horizontalLayout = new HorizontalLayout();
+
+    Icon userIcon = new Icon(VaadinIcon.USER);
+    Icon backIcon = new Icon(VaadinIcon.ARROW_LEFT);
 
     Div divFirstName = new Div();
     Div divLastName = new Div();
@@ -79,24 +80,16 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
     TextField facebook = new TextField();
     TextField twitter = new TextField();
 
-    VerticalLayout verticalLayout = new VerticalLayout();
-    HorizontalLayout horizontalLayout = new HorizontalLayout();
-
-
+    Button btnUpdate = new Button("Güncelle");
+    Button btnDelete = new Button("Sil");
 
     public ContactDetailsView(ContactService contactService){
         this.contactService = contactService;
 
         binderBind();
 
-        verticalLayout.setClassName("vertical");
-        userIcon.setSize("100px");
-
-
         btnDelete.addThemeVariants(ButtonVariant.LUMO_ERROR);
         btnUpdate.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
-
-
 
         for (Label label : new Label[]{lblFirstName,lblLastName,lblCompany,lblMobilePhone,lblHomePhone,lblJobPhone,lblFaxPhone,lblHomeAddress,lblJobAddress,lblOtherAddress,lblFacebook,lblTwitter}) {
             label.setClassName("labels");
@@ -111,20 +104,31 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
             textArea.setClassName("textfield-textarea-width");
         }
 
-
-        adres.setClassName("headerke");
-        telefon.setClassName("headerke");
-        sosyalMedya.setClassName("headerke");
+        contactDetailsDiv.setClassName("contactdetails-newcontact-view");
+        verticalLayout.setClassName("vertical");
+        backIcon.setSize("30px");
+        backIcon.getStyle().set("cursor", "pointer");
         userIcon.setClassName("user-icon");
+        userIcon.setSize("150px");
+        adres.setClassName("telefon-adres-sosyalmedya-header");
+        adres.addClassName("adres-header");
+        telefon.setClassName("telefon-adres-sosyalmedya-header");
+        telefon.addClassName("telefon-header");
+        sosyalMedya.setClassName("telefon-adres-sosyalmedya-header");
+        sosyalMedya.addClassName("sosyalmedya-header");
         horizontalLayout.setClassName("horizontal");
-        mainDiv.setClassName("main");
+        btnUpdate.setClassName("update-save-button");
 
         divAdd();
 
+        backIcon.addClickListener(iconClickEvent -> {
+            UI.getCurrent().getPage().setLocation("user/" + userID + "/contacts");
+        });
+
         horizontalLayout.add(btnDelete,btnUpdate);
-        verticalLayout.add(userIcon,divFirstName,divLastName,divCompany,telefon,divMobilePhone,divHomePhone,divJobPhone,divFaxPhone,adres,divHomeAddress,divJobAdress,divOtherAddress,sosyalMedya,divFacebook,divTwitter,horizontalLayout);
-        mainDiv.add(verticalLayout);
-        add(mainDiv);
+        verticalLayout.add(backIcon,userIcon,divFirstName,divLastName,divCompany,telefon,divMobilePhone,divHomePhone,divJobPhone,divFaxPhone,adres,divHomeAddress,divJobAdress,divOtherAddress,sosyalMedya,divFacebook,divTwitter,horizontalLayout);
+        contactDetailsDiv.add(verticalLayout);
+        add(contactDetailsDiv);
     }
 
     @Override

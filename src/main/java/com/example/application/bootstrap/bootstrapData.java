@@ -27,11 +27,6 @@ public class bootstrapData implements CommandLineRunner {
         user1.setName("brky");
         userService.save(user1);
 
-        User user2 = new User();
-        user2.setEmail("mert");
-        user2.setPassword("123");
-        user2.setName("mert");
-        userService.save(user2);
 
         Contact contact1 = new Contact();
         contact1.setFirstName("berkay");
@@ -74,7 +69,7 @@ public class bootstrapData implements CommandLineRunner {
         contact3.setCompany("Dunno");
 
 
-        contact3.setUser(user2);
+        contact3.setUser(user1);
         contactService.save(contact3);
 
 
