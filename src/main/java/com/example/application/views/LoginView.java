@@ -24,7 +24,7 @@ import com.vaadin.flow.theme.lumo.Lumo;
 
 
 @Route("/")
-@CssImport("./styles/now.css")
+@CssImport("./styles/AdresDefteri.css")
 @Theme(variant = Lumo.DARK)
 public class LoginView extends VerticalLayout {
 

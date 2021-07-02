@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Set;
 
 @Route("user/:userID/contacts")
-@CssImport("./styles/ContactsView.css")
+@CssImport("./styles/AdresDefteri.css")
 public class ContactsView extends VerticalLayout implements BeforeEnterObserver {
 
     String userID;

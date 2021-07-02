@@ -5,6 +5,7 @@ import com.example.application.services.UserService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
@@ -15,6 +16,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 
 @Route("signin")
+@CssImport("./styles/AdresDefteri.css")
 public class SignInView extends VerticalLayout {
 
     private final UserService userService;
@@ -41,14 +43,11 @@ public class SignInView extends VerticalLayout {
         btnSignIn.addClickListener(buttonClickEvent -> {
             if(username.getValue().equals("")){
                 Notification.show("Lütfen kullanıcı adı giriniz!");
-            }
-            if(email.getValue().equals("")){
+            }else if(email.getValue().equals("")){
                 Notification.show("Lütfen email giriniz!");
-            }
-            if(password.getValue().equals("")){
+            }else if(password.getValue().equals("")){
                 Notification.show("Lütfen şifre giriniz!");
-            }
-            else{
+            }else{
                 User newUser = new User();
                 newUser.setEmail(email.getValue());
                 newUser.setName(username.getValue());

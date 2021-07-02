@@ -7,10 +7,12 @@ import com.example.application.services.UserService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
@@ -20,6 +22,7 @@ import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.router.*;
 
 @Route("user/:userID/contacts/new-contact")
+@CssImport("./styles/AdresDefteri.css")
 public class NewContactView extends VerticalLayout implements BeforeEnterObserver {
 
     String userID;
@@ -91,8 +94,6 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
 
         binderBind();
 
-
-
         btnCancel.addThemeVariants(ButtonVariant.LUMO_ERROR);
         btnSave.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
 
@@ -135,15 +136,20 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
         });
 
         btnSave.addClickListener(buttonClickEvent -> {
-            try {
-                binder.writeBean(contact);
-            } catch (ValidationException e) {
-                e.printStackTrace();
+            if(firstName.getValue().equals("")){
+                Notification.show("Lütfen ad giriniz!");
+            }else if (lastName.getValue().equals("")){
+                Notification.show("Lütfen soyad giriniz!");
+            }else{
+                try {
+                    binder.writeBean(contact);
+                } catch (ValidationException e) {
+                    e.printStackTrace();
+                }
+                contact.setId(contactID);
+                contactService.save(contact);
+                UI.getCurrent().getPage().setLocation("user/" + userID + "/contacts");
             }
-            contact.setId(contactID);
-            contactService.save(contact);
-
-            UI.getCurrent().getPage().setLocation("user/" + userID + "/contacts");
         });
 
         horizontalLayout.add(btnCancel,btnSave);

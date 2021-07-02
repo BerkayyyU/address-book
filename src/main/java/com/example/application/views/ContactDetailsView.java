@@ -10,6 +10,7 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
@@ -19,7 +20,7 @@ import com.vaadin.flow.router.*;
 
 
 @Route("user/:userID/contacts/:contactID/contact-details")
-@CssImport("./styles/ContactDetailsView.css")
+@CssImport("./styles/AdresDefteri.css")
 public class ContactDetailsView extends VerticalLayout implements  BeforeEnterObserver{
 
     private final ContactService contactService;
@@ -140,8 +141,15 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
         binder.readBean(contact);
 
         btnUpdate.addClickListener(buttonClickEvent -> {
-            contactService.update(contact,firstName.getValue(),lastName.getValue(),company.getValue(),mobilePhone.getValue(),homePhone.getValue(),jobPhone.getValue(),faxPhone.getValue(),homeAdress.getValue(),jobAddress.getValue(),otherAddress.getValue(),facebook.getValue(),twitter.getValue());
-            UI.getCurrent().getPage().setLocation("user/" + userID + "/contacts");
+            if(firstName.getValue().equals("")){
+                Notification.show("Lütfen ad giriniz!");
+            }else if (lastName.getValue().equals("")){
+                Notification.show("Lütfen soyad giriniz!");
+            }else{
+                contactService.update(contact,firstName.getValue(),lastName.getValue(),company.getValue(),mobilePhone.getValue(),homePhone.getValue(),jobPhone.getValue(),faxPhone.getValue(),homeAdress.getValue(),jobAddress.getValue(),otherAddress.getValue(),facebook.getValue(),twitter.getValue());
+                UI.getCurrent().getPage().setLocation("user/" + userID + "/contacts");
+            }
+
         });
 
         btnDelete.addClickListener(buttonClickEvent -> {
