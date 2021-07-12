@@ -1,13 +1,17 @@
 package com.example.application.views;
 
 import com.example.application.models.Contact;
+import com.example.application.models.Phone;
 import com.example.application.models.User;
 import com.example.application.services.ContactService;
+import com.example.application.services.PhoneService;
 import com.example.application.services.UserService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
@@ -15,6 +19,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
@@ -41,10 +46,6 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
     Div divFirstName = new Div();
     Div divLastName = new Div();
     Div divCompany = new Div();
-    Div divMobilePhone = new Div();
-    Div divHomePhone = new Div();
-    Div divJobPhone = new Div();
-    Div divFaxPhone = new Div();
     Div divHomeAddress = new Div();
     Div divJobAdress = new Div();
     Div divOtherAddress = new Div();
@@ -54,10 +55,6 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
     Label lblFirstName = new Label("Ad:");
     Label lblLastName = new Label("Soyad:");
     Label lblCompany = new Label("Şirket:");
-    Label lblMobilePhone = new Label("Mobil:");
-    Label lblHomePhone = new Label("Ev:");
-    Label lblJobPhone = new Label("İş:");
-    Label lblFaxPhone = new Label("Fax:");
     Label lblHomeAddress = new Label("Ev:");
     Label lblJobAddress = new Label("İş:");
     Label lblOtherAddress = new Label("Diğer:");
@@ -71,10 +68,6 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
     TextField firstName = new TextField( );
     TextField lastName = new TextField();
     TextField company = new TextField();
-    TextField mobilePhone = new TextField();
-    TextField homePhone = new TextField();
-    TextField jobPhone = new TextField();
-    TextField faxPhone = new TextField();
     TextArea homeAdress = new TextArea();
     TextArea jobAddress = new TextArea();
     TextArea otherAddress = new TextArea();
@@ -86,11 +79,26 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
 
     private final ContactService contactService;
     private final UserService userService;
+    private final PhoneService phoneService;
 
-    public NewContactView(ContactService contactService, UserService userService){
+    Binder<Phone> phoneBinder = new Binder();
+    Grid<Phone> phoneGrid = new Grid(Phone.class);
+    Phone phone = new Phone();
+    Long phoneID = 0L;
+    Select<String> selectPhoneType = new Select<>("Mobil","Ev","İş","Fax");
+    TextField txtPhoneNo = new TextField("No girin");
+    Button btnDeletePhone = new Button("Sil");
+    Button btnUpdatePhone = new Button("Güncelle");
+    Button btnCancelPhone = new Button("İptal");
+    Button btnSavePhone = new Button("Kaydet");
+    Dialog phoneDialog = new Dialog();
+    Icon iconAdd = new Icon(VaadinIcon.PLUS);
+
+    public NewContactView(ContactService contactService, UserService userService, PhoneService phoneService){
 
         this.contactService = contactService;
         this.userService = userService;
+        this.phoneService = phoneService;
 
         binderBind();
 
@@ -112,15 +120,19 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
         horizontalLayout.setClassName("horizontal");
         btnSave.setClassName("update-save-button");
 
+        phoneGrid.setClassName("contacts-grid");
+
+        phoneDialog.setModal(true);
+
         divAdd();
 
-        for (Label label : new Label[]{lblFirstName,lblLastName,lblCompany,lblMobilePhone,lblHomePhone,lblJobPhone,lblFaxPhone,lblHomeAddress,lblJobAddress,lblOtherAddress,lblFacebook,lblTwitter}) {
+        for (Label label : new Label[]{lblFirstName,lblLastName,lblCompany,lblHomeAddress,lblJobAddress,lblOtherAddress,lblFacebook,lblTwitter}) {
             label.setClassName("labels");
         }
-        for (Div div : new Div[]{divFirstName,divLastName,divCompany,divMobilePhone,divHomePhone,divJobPhone,divFaxPhone,divHomeAddress,divJobAdress,divOtherAddress,divFacebook,divTwitter}) {
+        for (Div div : new Div[]{divFirstName,divLastName,divCompany,divHomeAddress,divJobAdress,divOtherAddress,divFacebook,divTwitter}) {
             div.setClassName("divs");
         }
-        for (TextField textField : new TextField[]{firstName,lastName,company,mobilePhone,homePhone,jobPhone,faxPhone,facebook,twitter}) {
+        for (TextField textField : new TextField[]{firstName,lastName,company,facebook,twitter}) {
             textField.setClassName("textfield-textarea-width");
         }
         for (TextArea textArea : new TextArea[]{homeAdress,jobAddress,otherAddress}) {
@@ -152,8 +164,61 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
             }
         });
 
+        setGridColumns();
+
+        iconAdd.addClickListener(iconClickEvent -> {
+            phoneDialog.add(selectPhoneType,txtPhoneNo,btnCancelPhone,btnSavePhone);
+
+            phoneDialog.open();
+            btnCancelPhone.addClickListener(buttonClickEvent -> {
+                phoneDialog.close();
+            });
+            btnSavePhone.addClickListener(buttonClickEvent -> {
+                if(txtPhoneNo.getValue().equals("")){
+                    Notification.show("Lütfen telefon numarası giriniz");
+                }else{
+                    Phone phone2 = new Phone();
+                    try {
+                        phoneBinder.writeBean(phone2);
+                    } catch (ValidationException e) {
+                        e.printStackTrace();
+                    }
+                    phone2.setId(phoneID);
+                    phone2.setContact(contact);
+                    phone2.setType(selectPhoneType.getValue());
+                    phone2.setNo(txtPhoneNo.getValue());
+                    phoneService.save(phone2);
+                    //phoneGrid.setItems(phone);
+                    phoneDialog.close();
+                }
+            });
+        });
+
+
+        phoneGrid.addItemClickListener(phoneItemClickEvent -> {
+            phoneDialog.add(selectPhoneType,txtPhoneNo,btnDeletePhone,btnUpdatePhone);
+            Phone phone = phoneService.getPhone(phoneItemClickEvent.getItem().getId());
+            phoneBinder.readBean(phone);
+            phoneBinder.bind(txtPhoneNo,Phone::getNo,Phone::setNo);
+            phoneBinder.bind(selectPhoneType,Phone::getType,Phone::setType);
+            phoneDialog.open();
+
+            btnDeletePhone.addClickListener(buttonClickEvent -> {
+                phoneService.delete(phone);
+                phoneDialog.close();
+                UI.getCurrent().getPage().reload();
+            });
+
+            btnUpdatePhone.addClickListener(buttonClickEvent -> {
+                phoneService.update(phone,selectPhoneType.getValue(),txtPhoneNo.getValue());
+                phoneDialog.close();
+                UI.getCurrent().getPage().reload();
+            });
+
+        });
+
         horizontalLayout.add(btnCancel,btnSave);
-        verticalLayout.add(backIcon,userIcon,divFirstName,divLastName,divCompany,telefon,divMobilePhone,divHomePhone,divJobPhone,divFaxPhone,adres,divHomeAddress,divJobAdress,divOtherAddress,sosyalMedya,divFacebook,divTwitter,horizontalLayout);
+        verticalLayout.add(backIcon,userIcon,divFirstName,divLastName,divCompany,telefon,iconAdd,phoneGrid,adres,divHomeAddress,divJobAdress,divOtherAddress,sosyalMedya,divFacebook,divTwitter,horizontalLayout);
         newContactDiv.add(verticalLayout);
         add(newContactDiv);
 
@@ -171,10 +236,6 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
         binder.bind(firstName,Contact::getFirstName,Contact::setFirstName);
         binder.bind(lastName,Contact::getLastName,Contact::setLastName);
         binder.bind(company,Contact::getCompany,Contact::setCompany);
-        binder.bind(mobilePhone,Contact::getMobilePhone,Contact::setMobilePhone);
-        binder.bind(homePhone,Contact::getHomePhone,Contact::setHomePhone);
-        binder.bind(jobPhone,Contact::getJobPhone,Contact::setJobPhone);
-        binder.bind(faxPhone,Contact::getFaxPhone,Contact::setFaxPhone);
         binder.bind(homeAdress,Contact::getHomeAddress,Contact::setHomeAddress);
         binder.bind(jobAddress,Contact::getJobAddress,Contact::setJobAddress);
         binder.bind(otherAddress,Contact::getOtherAddress,Contact::setOtherAddress);
@@ -186,15 +247,20 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
         divFirstName.add(lblFirstName,firstName);
         divLastName.add(lblLastName,lastName);
         divCompany.add(lblCompany,company);
-        divMobilePhone.add(lblMobilePhone,mobilePhone);
-        divHomePhone.add(lblHomePhone,homePhone);
-        divJobPhone.add(lblJobPhone,jobPhone);
-        divFaxPhone.add(lblFaxPhone,faxPhone);
         divHomeAddress.add(lblHomeAddress,homeAdress);
         divJobAdress.add(lblJobAddress,jobAddress);
         divOtherAddress.add(lblOtherAddress,otherAddress);
         divFacebook.add(lblFacebook,facebook);
         divTwitter.add(lblTwitter,twitter);
+    }
+
+    private void setGridColumns(){
+        phoneGrid.addColumn(Phone::getType).setHeader("");
+        phoneGrid.addColumn(Phone::getNo).setHeader("");
+        phoneGrid.removeColumnByKey("id");
+        phoneGrid.removeColumnByKey("type");
+        phoneGrid.removeColumnByKey("no");
+        phoneGrid.removeColumnByKey("contact");
     }
 
 

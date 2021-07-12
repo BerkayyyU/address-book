@@ -39,7 +39,6 @@ public class ContactsView extends VerticalLayout implements BeforeEnterObserver 
     Div searchAndAdd = new Div();
     Div usernameAndLogOut = new Div();
 
-
     Grid<Contact> grid = new Grid<>(Contact.class);
 
     private final ContactService contactService;
@@ -114,10 +113,6 @@ public class ContactsView extends VerticalLayout implements BeforeEnterObserver 
         grid.removeColumnByKey("firstName");
         grid.removeColumnByKey("lastName");
         grid.removeColumnByKey("company");
-        grid.removeColumnByKey("mobilePhone");
-        grid.removeColumnByKey("homePhone");
-        grid.removeColumnByKey("jobPhone");
-        grid.removeColumnByKey("faxPhone");
         grid.removeColumnByKey("homeAddress");
         grid.removeColumnByKey("jobAddress");
         grid.removeColumnByKey("otherAddress");

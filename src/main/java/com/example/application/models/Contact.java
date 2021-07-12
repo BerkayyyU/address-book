@@ -6,6 +6,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Data
@@ -20,10 +22,6 @@ public class Contact {
     private String firstName;
     private String lastName;
     private String company;
-    private String mobilePhone;
-    private String homePhone;
-    private String jobPhone;
-    private String faxPhone;
     private String homeAddress;
     private String jobAddress;
     private String otherAddress;
@@ -32,5 +30,6 @@ public class Contact {
 
     @ManyToOne
     private User user;
+
 
 }
