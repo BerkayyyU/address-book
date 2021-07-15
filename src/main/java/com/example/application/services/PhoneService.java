@@ -13,4 +13,5 @@ public interface PhoneService {
     Phone save(Phone phone);
     Phone update(Phone phone, String phoneType, String phoneNo);
     void delete(Phone phone);
+    void deletePhones(Set<Phone> phoneSet);
 }

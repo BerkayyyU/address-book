@@ -68,9 +68,7 @@ public class ContactsView extends VerticalLayout implements BeforeEnterObserver 
             searchContacts(search.getValue());
         });
 
-        iconAdd.addClickListener(iconClickEvent -> {
-            UI.getCurrent().getPage().setLocation("user/"+ userID + "/contacts/new-contact");
-        });
+
 
         grid.addItemClickListener(contactItemClickEvent -> {
              contactID = String.valueOf(contactItemClickEvent.getItem().getId());
@@ -97,6 +95,15 @@ public class ContactsView extends VerticalLayout implements BeforeEnterObserver 
             setGridColumns();
             grid.setItems(contactList);
         }
+
+        iconAdd.addClickListener(iconClickEvent -> {
+            Contact contactNew = new Contact();
+            contactNew.setUser(user);
+            contactService.save(contactNew);
+            Long newContactId = contactNew.getId();
+            //UI.getCurrent().getPage().setLocation("user/"+ userID + "/contacts/new-contact");
+            UI.getCurrent().getPage().setLocation("user/"+ userID + "/contacts/new-contact/" + newContactId);
+        });
     }
 
     private void searchContacts(String filter){

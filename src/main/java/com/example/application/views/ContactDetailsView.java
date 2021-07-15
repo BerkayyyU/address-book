@@ -44,7 +44,6 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
     HorizontalLayout horizontalLayout = new HorizontalLayout();
 
     Icon userIcon = new Icon(VaadinIcon.USER);
-    Icon backIcon = new Icon(VaadinIcon.ARROW_LEFT);
 
     Div divFirstName = new Div();
     Div divLastName = new Div();
@@ -119,8 +118,6 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
 
         contactDetailsDiv.setClassName("contactdetails-newcontact-view");
         verticalLayout.setClassName("vertical");
-        backIcon.setSize("30px");
-        backIcon.getStyle().set("cursor", "pointer");
         userIcon.setClassName("user-icon");
         userIcon.setSize("150px");
         adres.setClassName("telefon-adres-sosyalmedya-header");
@@ -138,14 +135,10 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
 
         divAdd();
 
-        backIcon.addClickListener(iconClickEvent -> {
-            UI.getCurrent().getPage().setLocation("user/" + userID + "/contacts");
-        });
-
 
 
         horizontalLayout.add(btnDelete,btnUpdate);
-        verticalLayout.add(backIcon,userIcon,divFirstName,divLastName,divCompany,telefon,iconAdd,phoneGrid,adres,divHomeAddress,divJobAdress,divOtherAddress,sosyalMedya,divFacebook,divTwitter,horizontalLayout);
+        verticalLayout.add(userIcon,divFirstName,divLastName,divCompany,telefon,iconAdd,phoneGrid,adres,divHomeAddress,divJobAdress,divOtherAddress,sosyalMedya,divFacebook,divTwitter,horizontalLayout);
         contactDetailsDiv.add(verticalLayout);
         add(contactDetailsDiv);
     }
@@ -154,6 +147,7 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
         contactID = beforeEnterEvent.getRouteParameters().get("contactID").get();
         userID = beforeEnterEvent.getRouteParameters().get("userID").get();
+
 
         Contact contact = contactService.getContactByIdAndUserId(Long.valueOf(contactID),Long.valueOf(userID));
         Set<Phone> phoneList = phoneService.getPhoneList(Long.valueOf(contactID));
@@ -180,9 +174,11 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
         });
 
         btnDelete.addClickListener(buttonClickEvent -> {
+            phoneService.deletePhones(phoneList);
             contactService.delete(contact);
             UI.getCurrent().getPage().setLocation("user/" + userID + "/contacts");
         });
+
 
         iconAdd.addClickListener(iconClickEvent -> {
             phoneDialog.removeAll();
@@ -210,11 +206,10 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
                 phone.setId(phoneID);
                 phone.setContact(contact);
                 phoneService.save(phone);
+                contactService.update(contact,firstName.getValue(),lastName.getValue(),company.getValue(),homeAdress.getValue(),jobAddress.getValue(),otherAddress.getValue(),facebook.getValue(),twitter.getValue());
                 UI.getCurrent().getPage().reload();
             }
         });
-
-
 
         phoneGrid.addItemClickListener(phoneItemClickEvent -> {
             Binder<Phone> phoneBinder2 = new Binder();

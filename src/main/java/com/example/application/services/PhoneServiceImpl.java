@@ -49,4 +49,9 @@ public class PhoneServiceImpl implements PhoneService {
     public void delete(Phone phone) {
         phoneRepository.delete(phone);
     }
+
+    @Override
+    public void deletePhones(Set<Phone> phoneSet) {
+        phoneRepository.deleteAll(phoneSet);
+    }
 }
