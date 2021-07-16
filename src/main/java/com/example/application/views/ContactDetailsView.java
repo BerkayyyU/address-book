@@ -1,7 +1,9 @@
 package com.example.application.views;
 
+import com.example.application.models.Address;
 import com.example.application.models.Contact;
 import com.example.application.models.Phone;
+import com.example.application.services.AddressService;
 import com.example.application.services.ContactService;
 import com.example.application.services.PhoneService;
 import com.vaadin.flow.component.UI;
@@ -33,6 +35,7 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
 
     private final ContactService contactService;
     private final PhoneService phoneService;
+    private final AddressService addressService;
 
     private String contactID;
     private String userID;
@@ -48,18 +51,12 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
     Div divFirstName = new Div();
     Div divLastName = new Div();
     Div divCompany = new Div();
-    Div divHomeAddress = new Div();
-    Div divJobAdress = new Div();
-    Div divOtherAddress = new Div();
     Div divFacebook = new Div();
     Div divTwitter = new Div();
 
     Label lblFirstName = new Label("Ad:");
     Label lblLastName = new Label("Soyad:");
     Label lblCompany = new Label("Şirket:");
-    Label lblHomeAddress = new Label("Ev:");
-    Label lblJobAddress = new Label("İş:");
-    Label lblOtherAddress = new Label("Diğer:");
     Label lblFacebook = new Label("Facebook:");
     Label lblTwitter = new Label("Twitter:");
 
@@ -70,49 +67,60 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
     TextField firstName = new TextField();
     TextField lastName = new TextField();
     TextField company = new TextField();
-    TextArea homeAdress = new TextArea();
-    TextArea jobAddress = new TextArea();
-    TextArea otherAddress = new TextArea();
     TextField facebook = new TextField();
     TextField twitter = new TextField();
 
-    Button btnUpdate = new Button("Güncelle");
-    Button btnDelete = new Button("Sil");
+    Button btnUpdateContact = new Button("Güncelle");
+    Button btnDeleteContact = new Button("Sil");
 
 
     Grid<Phone> phoneGrid = new Grid(Phone.class);
+    Grid<Address> addressGrid = new Grid<>(Address.class);
 
     Long phoneID = 0L;
+
     Select<String> selectPhoneType = new Select<>("Mobil","Ev","İş","Fax");
     TextField txtPhoneNo = new TextField("No girin");
-    Select<String> newSelectPhoneType = new Select<>("Mobil","Ev","İş","Fax");
-    TextField newTxtPhoneNo = new TextField("No girin");
+
+    Long addressID = 0L;
+
+    Select<String> selectAddressType = new Select<>("Ev","İş","Diğer");
+    TextArea txtAddress = new TextArea("Adres girin");
+
     Button btnDeletePhone = new Button("Sil");
     Button btnUpdatePhone = new Button("Güncelle");
     Button btnCancelPhone = new Button("İptal");
     Button btnSavePhone = new Button("Kaydet");
-    Dialog phoneDialog = new Dialog();
-    Icon iconAdd = new Icon(VaadinIcon.PLUS);
 
-    public ContactDetailsView(ContactService contactService, PhoneService phoneService){
+    Button btnDeleteAddress = new Button("Sil");
+    Button btnUpdateAddress = new Button("Güncelle");
+    Button btnCancelAddress = new Button("İptal");
+    Button btnSaveAddress = new Button("Kaydet");
+
+    Dialog phoneDialog = new Dialog();
+    Icon addPhone = new Icon(VaadinIcon.PLUS);
+    Icon addAddress = new Icon(VaadinIcon.PLUS);
+
+    public ContactDetailsView(ContactService contactService, PhoneService phoneService, AddressService addressService){
         this.contactService = contactService;
         this.phoneService = phoneService;
+        this.addressService = addressService;
 
         binderBind();
 
-        btnDelete.addThemeVariants(ButtonVariant.LUMO_ERROR);
-        btnUpdate.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
+        btnDeleteContact.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        btnUpdateContact.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
 
-        for (Label label : new Label[]{lblFirstName,lblLastName,lblCompany,lblHomeAddress,lblJobAddress,lblOtherAddress,lblFacebook,lblTwitter}) {
+        for (Label label : new Label[]{lblFirstName,lblLastName,lblCompany,lblFacebook,lblTwitter}) {
             label.setClassName("labels");
         }
-        for (Div div : new Div[]{divFirstName,divLastName,divCompany,divHomeAddress,divJobAdress,divOtherAddress,divFacebook,divTwitter}) {
+        for (Div div : new Div[]{divFirstName,divLastName,divCompany,divFacebook,divTwitter}) {
             div.setClassName("divs");
         }
         for (TextField textField : new TextField[]{firstName,lastName,company,facebook,twitter}) {
             textField.setClassName("textfield-textarea-width");
         }
-        for (TextArea textArea : new TextArea[]{homeAdress,jobAddress,otherAddress}) {
+        for (TextArea textArea : new TextArea[]{}) {
             textArea.setClassName("textfield-textarea-width");
         }
 
@@ -127,18 +135,17 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
         sosyalMedya.setClassName("telefon-adres-sosyalmedya-header");
         sosyalMedya.addClassName("sosyalmedya-header");
         horizontalLayout.setClassName("horizontal");
-        btnUpdate.setClassName("update-save-button");
+        btnUpdateContact.setClassName("update-save-button");
 
         phoneGrid.setClassName("contacts-grid");
+        addressGrid.setClassName("contacts-grid");
 
         phoneDialog.setModal(true);
 
         divAdd();
 
-
-
-        horizontalLayout.add(btnDelete,btnUpdate);
-        verticalLayout.add(userIcon,divFirstName,divLastName,divCompany,telefon,iconAdd,phoneGrid,adres,divHomeAddress,divJobAdress,divOtherAddress,sosyalMedya,divFacebook,divTwitter,horizontalLayout);
+        horizontalLayout.add(btnDeleteContact,btnUpdateContact);
+        verticalLayout.add(userIcon,divFirstName,divLastName,divCompany,telefon,addPhone,phoneGrid,adres,addAddress,addressGrid,sosyalMedya,divFacebook,divTwitter,horizontalLayout);
         contactDetailsDiv.add(verticalLayout);
         add(contactDetailsDiv);
     }
@@ -150,39 +157,46 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
 
 
         Contact contact = contactService.getContactByIdAndUserId(Long.valueOf(contactID),Long.valueOf(userID));
-        Set<Phone> phoneList = phoneService.getPhoneList(Long.valueOf(contactID));
+        Set<Phone> phoneSet = phoneService.getPhoneList(Long.valueOf(contactID));
+        Set<Address> addressSet = addressService.getAddressList(Long.valueOf(contactID));
 
-        if(phoneList==null){
+        if(phoneSet==null){
             setGridColumns();
         }else{
             setGridColumns();
-            phoneGrid.setItems(phoneList);
+            phoneGrid.setItems(phoneSet);
+        }
+        if(addressSet==null){
+            setAddressGridColumns();
+        }else{
+            setAddressGridColumns();
+            addressGrid.setItems(addressSet);
         }
 
         binder.readBean(contact);
 
-        btnUpdate.addClickListener(buttonClickEvent -> {
+        btnUpdateContact.addClickListener(buttonClickEvent -> {
             if(firstName.getValue().equals("")){
                 Notification.show("Lütfen ad giriniz!");
             }else if (lastName.getValue().equals("")){
                 Notification.show("Lütfen soyad giriniz!");
             }else{
-                contactService.update(contact,firstName.getValue(),lastName.getValue(),company.getValue(),homeAdress.getValue(),jobAddress.getValue(),otherAddress.getValue(),facebook.getValue(),twitter.getValue());
+                contactService.update(contact,firstName.getValue(),lastName.getValue(),company.getValue(),facebook.getValue(),twitter.getValue());
                 UI.getCurrent().getPage().setLocation("user/" + userID + "/contacts");
             }
 
         });
 
-        btnDelete.addClickListener(buttonClickEvent -> {
-            phoneService.deletePhones(phoneList);
+        btnDeleteContact.addClickListener(buttonClickEvent -> {
+            phoneService.deletePhones(phoneSet);
             contactService.delete(contact);
             UI.getCurrent().getPage().setLocation("user/" + userID + "/contacts");
         });
 
 
-        iconAdd.addClickListener(iconClickEvent -> {
+        addPhone.addClickListener(iconClickEvent -> {
             phoneDialog.removeAll();
-            phoneDialog.add(newSelectPhoneType,newTxtPhoneNo,btnCancelPhone,btnSavePhone);
+            phoneDialog.add(selectPhoneType,txtPhoneNo,btnCancelPhone,btnSavePhone);
             phoneDialog.open();
 
         });
@@ -191,13 +205,13 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
         });
 
         btnSavePhone.addClickListener(buttonClickEvent -> {
-            if (newTxtPhoneNo.getValue().equals("")){
+            if (txtPhoneNo.getValue().equals("")){
                 Notification.show("Lütfen telefon numarası giriniz");
             }else{
                 Binder<Phone> phoneBinder = new Binder();
                 Phone phone = new Phone();
-                phoneBinder.bind(newTxtPhoneNo,Phone::getNo,Phone::setNo);
-                phoneBinder.bind(newSelectPhoneType,Phone::getType,Phone::setType);
+                phoneBinder.bind(txtPhoneNo,Phone::getNo,Phone::setNo);
+                phoneBinder.bind(selectPhoneType,Phone::getType,Phone::setType);
                 try {
                     phoneBinder.writeBean(phone);
                 } catch (ValidationException e) {
@@ -206,7 +220,7 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
                 phone.setId(phoneID);
                 phone.setContact(contact);
                 phoneService.save(phone);
-                contactService.update(contact,firstName.getValue(),lastName.getValue(),company.getValue(),homeAdress.getValue(),jobAddress.getValue(),otherAddress.getValue(),facebook.getValue(),twitter.getValue());
+                contactService.update(contact,firstName.getValue(),lastName.getValue(),company.getValue(),facebook.getValue(),twitter.getValue());
                 UI.getCurrent().getPage().reload();
             }
         });
@@ -231,17 +245,80 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
 
             btnDeletePhone.addClickListener(buttonClickEvent -> {
                 phoneService.delete(phone2);
-                phoneDialog.close();
                 UI.getCurrent().getPage().reload();
             });
 
             btnUpdatePhone.addClickListener(buttonClickEvent -> {
                 phoneService.update(phone2,selectPhoneType.getValue(),txtPhoneNo.getValue());
+                UI.getCurrent().getPage().reload();
+            });
+
+        });
+        //---------------------------------------------------------
+        addressGrid.addItemClickListener(addressItemClickEvent -> {
+            Binder<Address> addressBinder = new Binder();
+            phoneDialog.removeAll();
+            phoneDialog.add(selectAddressType,txtAddress,btnDeleteAddress,btnUpdateAddress);
+            Address address = addressService.getAddress(addressItemClickEvent.getItem().getId());
+
+            addressBinder.bind(txtAddress,Address::getAddressText,Address::setAddressText);
+            addressBinder.bind(selectAddressType,Address::getType,Address::setType);
+            addressBinder.readBean(address);
+
+            phoneDialog.addDialogCloseActionListener(dialogCloseActionEvent -> {
+                addressBinder.removeBinding(txtAddress);
+                addressBinder.removeBinding(selectAddressType);
+                phoneDialog.isCloseOnOutsideClick();
+            });
+
+            phoneDialog.open();
+
+            btnDeleteAddress.addClickListener(buttonClickEvent -> {
+                addressService.delete(address);
+                phoneDialog.close();
+                UI.getCurrent().getPage().reload();
+            });
+
+            btnUpdateAddress.addClickListener(buttonClickEvent -> {
+                addressService.update(address,selectAddressType.getValue(),txtAddress.getValue());
                 phoneDialog.close();
                 UI.getCurrent().getPage().reload();
             });
 
         });
+        //---------------------------------------------------------------------------------------
+        addAddress.addClickListener(iconClickEvent -> {
+            phoneDialog.removeAll();
+            phoneDialog.add(selectAddressType,txtAddress,btnCancelAddress,btnSaveAddress);
+            phoneDialog.open();
+
+        });
+        btnCancelAddress.addClickListener(buttonClickEvent -> {
+            phoneDialog.close();
+        });
+
+        btnSaveAddress.addClickListener(buttonClickEvent -> {
+            if (txtAddress.getValue().equals("")){
+                Notification.show("Lütfen adres giriniz");
+            }else{
+                Binder<Address> addressBinder = new Binder();
+                Address address = new Address();
+                addressBinder.bind(txtAddress,Address::getAddressText,Address::setAddressText);
+                addressBinder.bind(selectAddressType,Address::getType,Address::setType);
+                try {
+                    addressBinder.writeBean(address);
+                } catch (ValidationException e) {
+                    e.printStackTrace();
+                }
+                address.setId(addressID);
+                address.setContact(contact);
+                addressService.save(address);
+                contactService.update(contact,firstName.getValue(),lastName.getValue(),company.getValue(),facebook.getValue(),twitter.getValue());
+                UI.getCurrent().getPage().reload();
+            }
+        });
+        //-------------------------------------------------------------------
+
 
     }
 
@@ -249,9 +326,6 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
         binder.bind(firstName,Contact::getFirstName,Contact::setFirstName);
         binder.bind(lastName,Contact::getLastName,Contact::setLastName);
         binder.bind(company,Contact::getCompany,Contact::setCompany);
-        binder.bind(homeAdress,Contact::getHomeAddress,Contact::setHomeAddress);
-        binder.bind(jobAddress,Contact::getJobAddress,Contact::setJobAddress);
-        binder.bind(otherAddress,Contact::getOtherAddress,Contact::setOtherAddress);
         binder.bind(facebook,Contact::getFacebook,Contact::setFacebook);
         binder.bind(twitter,Contact::getTwitter,Contact::setTwitter);
 
@@ -261,9 +335,6 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
         divFirstName.add(lblFirstName,firstName);
         divLastName.add(lblLastName,lastName);
         divCompany.add(lblCompany,company);
-        divHomeAddress.add(lblHomeAddress,homeAdress);
-        divJobAdress.add(lblJobAddress,jobAddress);
-        divOtherAddress.add(lblOtherAddress,otherAddress);
         divFacebook.add(lblFacebook,facebook);
         divTwitter.add(lblTwitter,twitter);
     }
@@ -275,6 +346,15 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
         phoneGrid.removeColumnByKey("type");
         phoneGrid.removeColumnByKey("no");
         phoneGrid.removeColumnByKey("contact");
+    }
+
+    private void setAddressGridColumns(){
+        addressGrid.addColumn(Address::getType).setHeader("");
+        addressGrid.addColumn(Address::getAddressText).setHeader("");
+        addressGrid.removeColumnByKey("id");
+        addressGrid.removeColumnByKey("type");
+        addressGrid.removeColumnByKey("addressText");
+        addressGrid.removeColumnByKey("contact");
     }
 
 }

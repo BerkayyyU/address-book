@@ -10,13 +10,13 @@ import javax.persistence.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Phone {
+public class Address {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String type;
-    private String no;
+    private String addressText;
 
     @ManyToOne
     private Contact contact;

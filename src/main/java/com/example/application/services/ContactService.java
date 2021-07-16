@@ -10,5 +10,5 @@ public interface ContactService {
     Set<Contact> getContactsByUserId(Long id);
     Contact getContactByIdAndUserId(Long contactID, Long userID);
     void delete(Contact contact);
-    Contact update(Contact contact, String firstName, String lastName, String company, String homeAddress, String jobAddress, String otherAddress, String facebook, String twitter);
+    Contact update(Contact contact, String firstName, String lastName, String company, String facebook, String twitter);
 }

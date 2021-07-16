@@ -6,8 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+
 
 @Entity
 @Data
@@ -22,9 +21,6 @@ public class Contact {
     private String firstName;
     private String lastName;
     private String company;
-    private String homeAddress;
-    private String jobAddress;
-    private String otherAddress;
     private String facebook;
     private String twitter;
 

@@ -35,9 +35,6 @@ public class bootstrapData implements CommandLineRunner {
         contact1.setFirstName("Ali");
         contact1.setLastName("Duru");
         contact1.setCompany("Ali Duru Şirket");
-        contact1.setHomeAddress("Ali Duru Ev");
-        contact1.setJobAddress("Ali Duru İş");
-        contact1.setOtherAddress("Ali Duru Ev 2");
         contact1.setFacebook("Ali Duru Facebook");
         contact1.setTwitter("Ali Duru Twitter");
 
@@ -66,9 +63,6 @@ public class bootstrapData implements CommandLineRunner {
         contact2.setFirstName("Aliye");
         contact2.setLastName("Duru");
         contact2.setCompany("Aliye Duru Şirket");
-        contact2.setHomeAddress("Aliye Duru Ev");
-        contact2.setJobAddress("Aliye Duru İş");
-        contact2.setOtherAddress("Aliye Duru Ev 2");
         contact2.setFacebook("Aliye Duru Facebook");
         contact2.setTwitter("Aliye Duru Twitter");
 
@@ -80,9 +74,6 @@ public class bootstrapData implements CommandLineRunner {
         contact3.setFirstName("Mehmet");
         contact3.setLastName("Yılmaz");
         contact3.setCompany("Mehmet Yılmaz Şirket");
-        contact3.setHomeAddress("Mehmet Yılmaz Ev");
-        contact3.setJobAddress("Mehmet Yılmaz İş");
-        contact3.setOtherAddress("Mehmet Yılmaz Ev 2");
         contact3.setFacebook("Mehmet Yılmaz Facebook");
         contact3.setTwitter("Mehmet Yılmaz Twitter");
 
@@ -93,9 +84,6 @@ public class bootstrapData implements CommandLineRunner {
         contact4.setFirstName("Ayşe");
         contact4.setLastName("Yıldız");
         contact4.setCompany("Ayşe Yıldız Şirket");
-        contact4.setHomeAddress("Ayşe Yıldız Ev");
-        contact4.setJobAddress("Ayşe Yıldız İş");
-        contact4.setOtherAddress("Ayşe Yıldız Ev 2");
         contact4.setFacebook("Ayşe Yıldız Facebook");
         contact4.setTwitter("Ayşe Yıldız Twitter");
 
@@ -106,9 +94,6 @@ public class bootstrapData implements CommandLineRunner {
         contact5.setFirstName("İrem");
         contact5.setLastName("Yıldırım");
         contact5.setCompany("İrem Yıldırım");
-        contact5.setHomeAddress("İrem Yıldırım Ev");
-        contact5.setJobAddress("İrem Yıldırım İş");
-        contact5.setOtherAddress("İrem Yıldırım Ev 2");
         contact5.setFacebook("İrem Yıldırım Facebook");
         contact5.setTwitter("İrem Yıldırım Twitter");
 
@@ -119,9 +104,6 @@ public class bootstrapData implements CommandLineRunner {
         contact6.setFirstName("Yağmur");
         contact6.setLastName("Şahin");
         contact6.setCompany("Yağmur Şahin Şirket");
-        contact6.setHomeAddress("Yağmur Şahin Ev");
-        contact6.setJobAddress("Yağmur Şahin İş");
-        contact6.setOtherAddress("Yağmur Şahin Ev 2");
         contact6.setFacebook("Yağmur Şahin Facebook");
         contact6.setTwitter("Yağmur Şahin Twitter");
 
@@ -132,9 +114,6 @@ public class bootstrapData implements CommandLineRunner {
         contact7.setFirstName("Hakan");
         contact7.setLastName("Öztürk");
         contact7.setCompany("Hakan Öztürk İş");
-        contact7.setHomeAddress("Hakan Öztürk Ev");
-        contact7.setJobAddress("Hakan Öztürk İş");
-        contact7.setOtherAddress("Hakan Öztürk Ev 2");
         contact7.setFacebook("Hakan Öztürk Facebook");
         contact7.setTwitter("Hakan Öztürk Twitter");
 
