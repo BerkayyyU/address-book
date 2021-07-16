@@ -1,13 +1,7 @@
 package com.example.application.views;
 
-import com.example.application.models.Address;
-import com.example.application.models.Contact;
-import com.example.application.models.Phone;
-import com.example.application.models.User;
-import com.example.application.services.AddressService;
-import com.example.application.services.ContactService;
-import com.example.application.services.PhoneService;
-import com.example.application.services.UserService;
+import com.example.application.models.*;
+import com.example.application.services.*;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -75,19 +69,25 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
     private final UserService userService;
     private final PhoneService phoneService;
     private final AddressService addressService;
+    private final SocialMediaService socialMediaService;
 
 
     Grid<Address> addressGrid = new Grid<>(Address.class);
     Grid<Phone> phoneGrid = new Grid(Phone.class);
+    Grid<SocialMedia> socialMediaGrid = new Grid(SocialMedia.class);
 
     Long phoneID = 0L;
     Long addressID = 0L;
+    Long socialMediaID = 0L;
 
     Select<String> selectPhoneType = new Select<>("Mobil","Ev","İş","Fax");
     TextField txtPhoneNo = new TextField("No girin");
 
     Select<String> selectAddressType = new Select<>("Ev","İş","Diğer");
     TextArea addressText = new TextArea("Adres girin");
+
+    Select<String> selectSocialMediaType = new Select<>("Facebook","Twitter","İnstagram","Linkedin");
+    TextField txtSocialMediaLink = new TextField("Link girin");
 
     Button btnDeletePhone = new Button("Sil");
     Button btnUpdatePhone = new Button("Güncelle");
@@ -99,16 +99,23 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
     Button btnCancelAddress = new Button("İptal");
     Button btnSaveAddress = new Button("Kaydet");
 
+    Button btnDeleteSocialMedia = new Button("Sil");
+    Button btnUpdateSocialMedia = new Button("Güncelle");
+    Button btnCancelSocialMedia = new Button("İptal");
+    Button btnSaveSocialMedia = new Button("Kaydet");
+
     Dialog phoneDialog = new Dialog();
     Icon addPhone = new Icon(VaadinIcon.PLUS);
     Icon addAddress = new Icon(VaadinIcon.PLUS);
+    Icon addSocialMedia = new Icon(VaadinIcon.PLUS);
 
-    public NewContactView(ContactService contactService, UserService userService, PhoneService phoneService, AddressService addressService){
+    public NewContactView(ContactService contactService, UserService userService, PhoneService phoneService, AddressService addressService, SocialMediaService socialMediaService){
 
         this.contactService = contactService;
         this.userService = userService;
         this.phoneService = phoneService;
         this.addressService = addressService;
+        this.socialMediaService = socialMediaService;
 
         binderBind();
 
@@ -231,9 +238,50 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
 
         });
         //-------------------------------------------------------------------------------------------
+        addSocialMedia.addClickListener(iconClickEvent -> {
+            phoneDialog.add(selectSocialMediaType,txtSocialMediaLink,btnCancelSocialMedia,btnSaveSocialMedia);
+            phoneDialog.open();
+            btnCancelSocialMedia.addClickListener(buttonClickEvent -> {
+                phoneDialog.close();
+            });
+
+        });
+
+        socialMediaGrid.addItemClickListener(addressItemClickEvent -> {
+            Binder<SocialMedia> socialMediaBinder = new Binder();
+            phoneDialog.removeAll();
+            phoneDialog.add(selectSocialMediaType,txtSocialMediaLink,btnDeleteSocialMedia,btnUpdateSocialMedia);
+            SocialMedia socialMedia = socialMediaService.getSocialMedia(addressItemClickEvent.getItem().getId());
+
+            socialMediaBinder.bind(txtSocialMediaLink,SocialMedia::getLink,SocialMedia::setLink);
+            socialMediaBinder.bind(selectSocialMediaType,SocialMedia::getType,SocialMedia::setType);
+            socialMediaBinder.readBean(socialMedia);
+
+            phoneDialog.addDialogCloseActionListener(dialogCloseActionEvent -> {
+                socialMediaBinder.removeBinding(txtSocialMediaLink);
+                socialMediaBinder.removeBinding(selectSocialMediaType);
+                phoneDialog.isCloseOnOutsideClick();
+            });
+
+            phoneDialog.open();
+
+            btnDeleteSocialMedia.addClickListener(buttonClickEvent -> {
+                socialMediaService.delete(socialMedia);
+                phoneDialog.close();
+                UI.getCurrent().getPage().reload();
+            });
+
+            btnUpdateSocialMedia.addClickListener(buttonClickEvent -> {
+                socialMediaService.update(socialMedia,selectSocialMediaType.getValue(),txtSocialMediaLink.getValue());
+                phoneDialog.close();
+                UI.getCurrent().getPage().reload();
+            });
+
+        });
+        //-------------------------------------------------------------------------
 
         horizontalLayout.add(btnCancel,btnSave);
-        verticalLayout.add(userIcon,divFirstName,divLastName,divCompany,telefon,addPhone,phoneGrid,adres,addAddress,addressGrid,sosyalMedya,divFacebook,divTwitter,horizontalLayout);
+        verticalLayout.add(userIcon,divFirstName,divLastName,divCompany,telefon,addPhone,phoneGrid,adres,addAddress,addressGrid,sosyalMedya,addSocialMedia,socialMediaGrid,divFacebook,divTwitter,horizontalLayout);
         newContactDiv.add(verticalLayout);
         add(newContactDiv);
 
@@ -248,6 +296,7 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
         Contact newContact = contactService.getContactByIdAndUserId(Long.valueOf(newContactID),Long.valueOf(userID));
         Set<Phone> phoneSet = phoneService.getPhoneList(Long.valueOf(newContactID));
         Set<Address> addressSet = addressService.getAddressList(Long.valueOf(newContactID));
+        Set<SocialMedia> socialMediaSet = socialMediaService.getSocialMediaList(Long.valueOf(newContactID));
 
 
         if(phoneSet==null){
@@ -261,6 +310,12 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
         }else{
             setAddressGridColumns();
             addressGrid.setItems(addressSet);
+        }
+        if(socialMediaSet==null){
+            setSocialMediaGridColumns();
+        }else{
+            setSocialMediaGridColumns();
+            socialMediaGrid.setItems(socialMediaSet);
         }
 
         binder.readBean(newContact);
@@ -278,7 +333,7 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
             phone.setId(phoneID);
             phone.setContact(newContact);
             phoneService.save(phone);
-            contactService.update(newContact,firstName.getValue(),lastName.getValue(),company.getValue(),facebook.getValue(),twitter.getValue());
+            contactService.update(newContact,firstName.getValue(),lastName.getValue(),company.getValue());
             UI.getCurrent().getPage().reload();
             binderBind();
         });
@@ -287,6 +342,7 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
         btnCancel.addClickListener(buttonClickEvent -> {
             phoneService.deletePhones(phoneSet);
             addressService.deleteAddresses(addressSet);
+            socialMediaService.deleteSocialMedias(socialMediaSet);
             contactService.delete(newContact);
             UI.getCurrent().getPage().setLocation("user/" + userID + "/contacts");
         });
@@ -307,13 +363,35 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
                 address.setId(addressID);
                 address.setContact(newContact);
                 addressService.save(address);
-                contactService.update(newContact, firstName.getValue(), lastName.getValue(), company.getValue(), facebook.getValue(), twitter.getValue());
+                contactService.update(newContact, firstName.getValue(), lastName.getValue(), company.getValue());
                 UI.getCurrent().getPage().reload();
                 binderBind();
             }
         });
 
         //-----------------------------------------------------------------------------
+        btnSaveSocialMedia.addClickListener(buttonClickEvent -> {
+            if (txtSocialMediaLink.getValue().equals("")){
+                Notification.show("Lütfen link giriniz");
+            }else {
+                Binder<SocialMedia> socialMediaBinder = new Binder();
+                SocialMedia socialMedia = new SocialMedia();
+                socialMediaBinder.bind(txtSocialMediaLink, SocialMedia::getLink, SocialMedia::setLink);
+                socialMediaBinder.bind(selectSocialMediaType, SocialMedia::getType, SocialMedia::setType);
+                try {
+                    socialMediaBinder.writeBean(socialMedia);
+                } catch (ValidationException e) {
+                    e.printStackTrace();
+                }
+                socialMedia.setId(socialMediaID);
+                socialMedia.setContact(newContact);
+                socialMediaService.save(socialMedia);
+                contactService.update(newContact, firstName.getValue(), lastName.getValue(), company.getValue());
+                UI.getCurrent().getPage().reload();
+                binderBind();
+            }
+        });
+        //-----------------------------------------------------------
 
         btnSave.addClickListener(buttonClickEvent -> {
             if(firstName.getValue().equals("")){
@@ -321,7 +399,7 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
             }else if (lastName.getValue().equals("")){
                 Notification.show("Lütfen soyad giriniz!");
             }else{
-                contactService.update(newContact,firstName.getValue(),lastName.getValue(),company.getValue(),facebook.getValue(),twitter.getValue());
+                contactService.update(newContact,firstName.getValue(),lastName.getValue(),company.getValue());
                 UI.getCurrent().getPage().setLocation("user/" + userID + "/contacts");
             }
         });
@@ -331,8 +409,8 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
         binder.bind(firstName,Contact::getFirstName,Contact::setFirstName);
         binder.bind(lastName,Contact::getLastName,Contact::setLastName);
         binder.bind(company,Contact::getCompany,Contact::setCompany);
-        binder.bind(facebook,Contact::getFacebook,Contact::setFacebook);
-        binder.bind(twitter,Contact::getTwitter,Contact::setTwitter);
+        /*binder.bind(facebook,Contact::getFacebook,Contact::setFacebook);
+        binder.bind(twitter,Contact::getTwitter,Contact::setTwitter);*/
     }
 
     private void divAdd(){
@@ -358,6 +436,15 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
         addressGrid.removeColumnByKey("type");
         addressGrid.removeColumnByKey("addressText");
         addressGrid.removeColumnByKey("contact");
+    }
+
+    private void setSocialMediaGridColumns(){
+        socialMediaGrid.addColumn(SocialMedia::getType).setHeader("");
+        socialMediaGrid.addColumn(SocialMedia::getLink).setHeader("");
+        socialMediaGrid.removeColumnByKey("id");
+        socialMediaGrid.removeColumnByKey("type");
+        socialMediaGrid.removeColumnByKey("link");
+        socialMediaGrid.removeColumnByKey("contact");
     }
 
 

@@ -46,12 +46,10 @@ public class ContactServiceImpl implements ContactService{
     }
 
     @Override
-    public Contact update(Contact contact, String firstName, String lastName, String company,String facebook, String twitter) {
+    public Contact update(Contact contact, String firstName, String lastName, String company) {
         contact.setFirstName(firstName);
         contact.setLastName(lastName);
         contact.setCompany(company);
-        contact.setFacebook(facebook);
-        contact.setTwitter(twitter);
 
         return contactRepository.save(contact);
     }
