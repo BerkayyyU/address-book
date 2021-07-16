@@ -9,6 +9,7 @@ import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -18,10 +19,16 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.upload.Upload;
+import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.router.*;
+import com.vaadin.flow.server.StreamResource;
+import org.apache.commons.io.IOUtils;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.Set;
 
 @Route("user/:userID/contacts/new-contact/:newContactId")
@@ -37,8 +44,6 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
     Button btnCancel = new Button("İptal");
 
     Div newContactDiv = new Div();
-
-    Icon userIcon = new Icon(VaadinIcon.USER);
 
     Div divFirstName = new Div();
     Div divLastName = new Div();
@@ -79,6 +84,8 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
     Long phoneID = 0L;
     Long addressID = 0L;
     Long socialMediaID = 0L;
+
+    Image profil;
 
     Select<String> selectPhoneType = new Select<>("Mobil","Ev","İş","Fax");
     TextField txtPhoneNo = new TextField("No girin");
@@ -124,8 +131,6 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
 
         newContactDiv.setClassName("contactdetails-newcontact-view");
         verticalLayout.setClassName("vertical");
-        userIcon.setClassName("user-icon");
-        userIcon.setSize("150px");
         adres.setClassName("telefon-adres-sosyalmedya-header");
         adres.addClassName("adres-header");
         telefon.setClassName("telefon-adres-sosyalmedya-header");
@@ -280,10 +285,7 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
         });
         //-------------------------------------------------------------------------
 
-        horizontalLayout.add(btnCancel,btnSave);
-        verticalLayout.add(userIcon,divFirstName,divLastName,divCompany,telefon,addPhone,phoneGrid,adres,addAddress,addressGrid,sosyalMedya,addSocialMedia,socialMediaGrid,divFacebook,divTwitter,horizontalLayout);
-        newContactDiv.add(verticalLayout);
-        add(newContactDiv);
+
 
     }
 
@@ -297,6 +299,42 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
         Set<Phone> phoneSet = phoneService.getPhoneList(Long.valueOf(newContactID));
         Set<Address> addressSet = addressService.getAddressList(Long.valueOf(newContactID));
         Set<SocialMedia> socialMediaSet = socialMediaService.getSocialMediaList(Long.valueOf(newContactID));
+
+        //----------------------------------------------
+        MultiFileMemoryBuffer buffer = new MultiFileMemoryBuffer();
+        Upload upload = new Upload(buffer);
+
+        StreamResource streamResource = new StreamResource("profil.png", () -> new ByteArrayInputStream(newContact.getImage()));
+        streamResource.setContentType("image/png");
+        profil = new Image(streamResource, "");
+
+        if(newContact.getImage() == null){
+            profil = new Image("/images/user.png", "Resim Yok");
+        }
+
+        profil.setHeight("264px");
+        profil.setWidth("264px");
+        //profil.setSizeUndefined();
+        profil.setClassName("profilImage");
+
+        upload.setAcceptedFileTypes("image/jpeg", "image/png", "image/gif");
+
+        upload.setMaxFiles(1);
+
+        upload.setReceiver(buffer);
+
+        upload.addSucceededListener(event -> {
+            try {
+                byte[] imageBytes = IOUtils.toByteArray(buffer.getInputStream(event.getFileName()));
+
+                StreamResource streamResource2 = new StreamResource("vaadin-logo.png", () -> new ByteArrayInputStream(imageBytes));
+                streamResource2.setContentType("image/png");
+                contactService.updateImage(newContact,imageBytes);
+                UI.getCurrent().getPage().reload();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
 
         if(phoneSet==null){
@@ -403,6 +441,11 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
                 UI.getCurrent().getPage().setLocation("user/" + userID + "/contacts");
             }
         });
+
+        horizontalLayout.add(btnCancel,btnSave);
+        verticalLayout.add(profil,upload,divFirstName,divLastName,divCompany,telefon,addPhone,phoneGrid,adres,addAddress,addressGrid,sosyalMedya,addSocialMedia,socialMediaGrid,divFacebook,divTwitter,horizontalLayout);
+        newContactDiv.add(verticalLayout);
+        add(newContactDiv);
     }
 
     private void binderBind(){

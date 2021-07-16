@@ -54,4 +54,10 @@ public class ContactServiceImpl implements ContactService{
         return contactRepository.save(contact);
     }
 
+    @Override
+    public Contact updateImage(Contact contact, byte[] image) {
+        contact.setImage(image);
+        return contactRepository.save(contact);
+    }
+
 }

@@ -22,6 +22,10 @@ public class Contact {
     private String lastName;
     private String company;
 
+    @Lob
+    private  byte[] image;
+    private  String imageUrl;
+
     @ManyToOne
     private User user;
 

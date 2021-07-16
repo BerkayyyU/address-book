@@ -11,4 +11,5 @@ public interface ContactService {
     Contact getContactByIdAndUserId(Long contactID, Long userID);
     void delete(Contact contact);
     Contact update(Contact contact, String firstName, String lastName, String company);
+    Contact updateImage(Contact contact, byte[] image);
 }
