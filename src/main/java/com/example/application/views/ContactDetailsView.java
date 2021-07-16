@@ -59,14 +59,12 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
     Div divFirstName = new Div();
     Div divLastName = new Div();
     Div divCompany = new Div();
-    Div divFacebook = new Div();
-    Div divTwitter = new Div();
+    Div divPhone = new Div();
+    Div divAdress = new Div();
 
     Label lblFirstName = new Label("Ad:");
     Label lblLastName = new Label("Soyad:");
     Label lblCompany = new Label("Şirket:");
-    Label lblFacebook = new Label("Facebook:");
-    Label lblTwitter = new Label("Twitter:");
 
     Label adres = new Label("Adres");
     Label telefon = new Label("Telefon");
@@ -75,8 +73,6 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
     TextField firstName = new TextField();
     TextField lastName = new TextField();
     TextField company = new TextField();
-    TextField facebook = new TextField();
-    TextField twitter = new TextField();
 
     Button btnUpdateContact = new Button("Güncelle");
     Button btnDeleteContact = new Button("Sil");
@@ -90,13 +86,13 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
     Long socialMediaID = 0L;
 
     Select<String> selectPhoneType = new Select<>("Mobil","Ev","İş","Fax");
-    TextField txtPhoneNo = new TextField("No girin");
+    TextField txtPhoneNo = new TextField();
 
     Select<String> selectAddressType = new Select<>("Ev","İş","Diğer");
-    TextArea txtAddress = new TextArea("Adres girin");
+    TextField txtAddress = new TextField();
 
     Select<String> selectSocialMediaType = new Select<>("Facebook","Twitter","İnstagram","Linkedin");
-    TextField txtSocialMediaLink = new TextField("Link girin");
+    TextField txtSocialMediaLink = new TextField();
 
     Button btnDeletePhone = new Button("Sil");
     Button btnUpdatePhone = new Button("Güncelle");
@@ -113,13 +109,21 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
     Button btnCancelSocialMedia = new Button("İptal");
     Button btnSaveSocialMedia = new Button("Kaydet");
 
-    Image profil;
+    Image userImg;
 
     Dialog phoneDialog = new Dialog();
 
     Icon addPhone = new Icon(VaadinIcon.PLUS);
     Icon addAddress = new Icon(VaadinIcon.PLUS);
     Icon addSocialMedia = new Icon(VaadinIcon.PLUS);
+
+    Div phoneHeaderAndAdd = new Div(telefon,addPhone);
+    Div addressHeaderAndAdd = new Div(adres,addAddress);
+    Div socialMediaHeaderAndAdd = new Div(sosyalMedya, addSocialMedia);
+    Div imgUpload = new Div();
+
+    MultiFileMemoryBuffer buffer = new MultiFileMemoryBuffer();
+    Upload upload = new Upload(buffer);
 
     public ContactDetailsView(ContactService contactService, PhoneService phoneService, AddressService addressService, SocialMediaService socialMediaService){
         this.contactService = contactService;
@@ -130,41 +134,52 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
 
         binderBind();
 
-        btnDeleteContact.addThemeVariants(ButtonVariant.LUMO_ERROR);
-        btnUpdateContact.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
-
-        for (Label label : new Label[]{lblFirstName,lblLastName,lblCompany,lblFacebook,lblTwitter}) {
+        for (Label label : new Label[]{lblFirstName,lblLastName,lblCompany}) {
             label.setClassName("labels");
         }
-        for (Div div : new Div[]{divFirstName,divLastName,divCompany,divFacebook,divTwitter}) {
+        for (Div div : new Div[]{divFirstName,divLastName,divCompany}) {
             div.setClassName("divs");
         }
-        for (TextField textField : new TextField[]{firstName,lastName,company,facebook,twitter}) {
+        for (TextField textField : new TextField[]{firstName,lastName,company,txtPhoneNo,txtSocialMediaLink }) {
             textField.setClassName("textfield-textarea-width");
         }
-        for (TextArea textArea : new TextArea[]{}) {
-            textArea.setClassName("textfield-textarea-width");
+        for (Button button : new Button[]{btnDeleteContact,btnCancelPhone,btnCancelAddress,btnCancelSocialMedia,btnDeletePhone,btnDeleteAddress,btnDeleteSocialMedia}) {
+            button.addThemeVariants(ButtonVariant.LUMO_ERROR);
         }
+        for (Button button : new Button[]{btnUpdateContact,btnSavePhone,btnSaveAddress,btnSaveSocialMedia,btnUpdatePhone,btnUpdateAddress,btnUpdateSocialMedia}) {
+            button.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
+        }
+        for (Icon icon : new Icon[]{addPhone,addAddress,addSocialMedia}) {
+            icon.setClassName("icon-add");
+        }
+        for (Grid grid : new Grid[]{phoneGrid,addressGrid,socialMediaGrid}) {
+            grid.setHeight("300px");
+        }
+
+        phoneHeaderAndAdd.setClassName("search-add");
+        addressHeaderAndAdd.setClassName("search-add");
+        socialMediaHeaderAndAdd.setClassName("search-add");
+
+        imgUpload.setClassName("img-upload");
+
+        divPhone.setClassName("div-phone");
+        divAdress.setClassName("div-phone");
+
+        selectPhoneType.setClassName("textfield-textarea-width");
 
         contactDetailsDiv.setClassName("contactdetails-newcontact-view");
         verticalLayout.setClassName("vertical");
+
         adres.setClassName("telefon-adres-sosyalmedya-header");
-        adres.addClassName("adres-header");
         telefon.setClassName("telefon-adres-sosyalmedya-header");
-        telefon.addClassName("telefon-header");
         sosyalMedya.setClassName("telefon-adres-sosyalmedya-header");
-        sosyalMedya.addClassName("sosyalmedya-header");
+
         horizontalLayout.setClassName("horizontal");
         btnUpdateContact.setClassName("update-save-button");
-
-        phoneGrid.setClassName("contacts-grid");
-        addressGrid.setClassName("contacts-grid");
-        socialMediaGrid.setClassName("contacts-grid");
 
         phoneDialog.setModal(true);
 
         divAdd();
-
 
     }
 
@@ -180,33 +195,26 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
 
         //--------------------------------------------------------------------------------------
 
-        MultiFileMemoryBuffer buffer = new MultiFileMemoryBuffer();
-        Upload upload = new Upload(buffer);
 
-        StreamResource streamResource = new StreamResource("profil.png", () -> new ByteArrayInputStream(contact.getImage()));
+
+        StreamResource streamResource = new StreamResource("user.png", () -> new ByteArrayInputStream(contact.getImage()));
         streamResource.setContentType("image/png");
-        profil = new Image(streamResource, "");
+        userImg = new Image(streamResource, "");
 
         if(contact.getImage() == null){
-            profil = new Image("/images/user.png", "Resim Yok");
+            userImg = new Image("/images/user.png", "Resim Yok");
         }
 
-        profil.setHeight("264px");
-        profil.setWidth("264px");
-        //profil.setSizeUndefined();
-        profil.setClassName("profilImage");
+        userImg.setClassName("userImg");
 
         upload.setAcceptedFileTypes("image/jpeg", "image/png", "image/gif");
-
         upload.setMaxFiles(1);
-
         upload.setReceiver(buffer);
-
         upload.addSucceededListener(event -> {
             try {
                 byte[] imageBytes = IOUtils.toByteArray(buffer.getInputStream(event.getFileName()));
 
-                StreamResource streamResource2 = new StreamResource("vaadin-logo.png", () -> new ByteArrayInputStream(imageBytes));
+                StreamResource streamResource2 = new StreamResource("user.png", () -> new ByteArrayInputStream(imageBytes));
                 streamResource2.setContentType("image/png");
                 contactService.updateImage(contact,imageBytes);
                 UI.getCurrent().getPage().reload();
@@ -214,9 +222,6 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
                 e.printStackTrace();
             }
         });
-
-
-
 
         if(phoneSet==null){
             setGridColumns();
@@ -248,7 +253,6 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
                 contactService.update(contact,firstName.getValue(),lastName.getValue(),company.getValue());
                 UI.getCurrent().getPage().setLocation("user/" + userID + "/contacts");
             }
-
         });
 
         btnDeleteContact.addClickListener(buttonClickEvent -> {
@@ -263,7 +267,7 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
 
         addPhone.addClickListener(iconClickEvent -> {
             phoneDialog.removeAll();
-            phoneDialog.add(selectPhoneType,txtPhoneNo,btnCancelPhone,btnSavePhone);
+            phoneDialog.add(divPhone,btnCancelPhone,btnSavePhone);
             phoneDialog.open();
 
         });
@@ -295,7 +299,7 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
         phoneGrid.addItemClickListener(phoneItemClickEvent -> {
             Binder<Phone> phoneBinder2 = new Binder();
             phoneDialog.removeAll();
-            phoneDialog.add(selectPhoneType,txtPhoneNo,btnDeletePhone,btnUpdatePhone);
+            phoneDialog.add(divPhone,btnDeletePhone,btnUpdatePhone);
             Phone phone2 = phoneService.getPhone(phoneItemClickEvent.getItem().getId());
 
             phoneBinder2.bind(txtPhoneNo,Phone::getNo,Phone::setNo);
@@ -447,8 +451,10 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
             }
         });
 
+
+        imgUpload.add(userImg,upload);
         horizontalLayout.add(btnDeleteContact,btnUpdateContact);
-        verticalLayout.add(profil,upload,divFirstName,divLastName,divCompany,telefon,addPhone,phoneGrid,adres,addAddress,addressGrid,sosyalMedya,addSocialMedia,socialMediaGrid,divFacebook,divTwitter,horizontalLayout);
+        verticalLayout.add(imgUpload,divFirstName,divLastName,divCompany,phoneHeaderAndAdd,phoneGrid,addressHeaderAndAdd,addressGrid,socialMediaHeaderAndAdd,socialMediaGrid,horizontalLayout);
         contactDetailsDiv.add(verticalLayout);
         add(contactDetailsDiv);
 
@@ -458,17 +464,14 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
         binder.bind(firstName,Contact::getFirstName,Contact::setFirstName);
         binder.bind(lastName,Contact::getLastName,Contact::setLastName);
         binder.bind(company,Contact::getCompany,Contact::setCompany);
-        /*binder.bind(facebook,Contact::getFacebook,Contact::setFacebook);
-        binder.bind(twitter,Contact::getTwitter,Contact::setTwitter);*/
-
     }
 
     private void divAdd(){
         divFirstName.add(lblFirstName,firstName);
         divLastName.add(lblLastName,lastName);
         divCompany.add(lblCompany,company);
-        divFacebook.add(lblFacebook,facebook);
-        divTwitter.add(lblTwitter,twitter);
+        divPhone.add(selectPhoneType,txtPhoneNo);
+        divAdress.add(selectAddressType,txtAddress);
     }
 
     private void setGridColumns(){
