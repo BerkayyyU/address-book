@@ -21,7 +21,7 @@
     font-size: 36px;
     font-weight: bold;
 }
-.search-add{
+.space-between{
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -61,6 +61,7 @@
 }
 .labels{
     width: 80px;
+    margin-top: 30px;
     margin-right: 20px;
 }
 .textfield-textarea-width{
@@ -113,7 +114,7 @@
 /* LOGIN AND SIGN IN VIEW */
 
 /**/
-.div-phone{
+.div-phone-address-socialMedia{
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -131,5 +132,13 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+.margin-left{
+    margin-top: 30px;
+    margin-left: 100px;
+}
+.textfields{
+    width: 250px;
+    margin-top: 30px;
 }
 /**/

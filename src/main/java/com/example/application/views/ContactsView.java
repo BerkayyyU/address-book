@@ -55,7 +55,7 @@ public class ContactsView extends VerticalLayout implements BeforeEnterObserver 
         contactsDiv.setClassName("contacts-view");
         usernameAndLogOut.setClassName("username-logout");
         lblUsername.setClassName("username");
-        searchAndAdd.setClassName("search-add");
+        searchAndAdd.setClassName("space-between");
         search.setClassName("search");
         iconAdd.setClassName("icon-add");
         grid.setClassName("contacts-grid");
