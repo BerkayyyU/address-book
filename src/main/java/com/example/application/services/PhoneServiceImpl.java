@@ -28,11 +28,6 @@ public class PhoneServiceImpl implements PhoneService {
         return phoneRepository.findPhoneById(phoneID);
     }
 
-    /*@Override
-    public List<Phone> getPhoneByContactIdAndUserId(Long contactID, Long userID) {
-        return phoneRepository.findPhoneByContactIdAndUserId(contactID,userID);
-    }*/
-
     @Override
     public Phone save(Phone phone) {
         return phoneRepository.save(phone);

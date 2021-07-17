@@ -17,7 +17,6 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
-import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
@@ -165,8 +164,7 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
             btnCancelPhone.addClickListener(buttonClickEvent -> {
                 selectPhoneType.setValue("Mobil");
                 txtPhoneNo.setValue("");
-                dialog.close();
-            });
+                dialog.close(); });
         });
 
         phoneGrid.addItemClickListener(phoneItemClickEvent -> {
@@ -183,31 +181,28 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
             dialog.addDialogCloseActionListener(dialogCloseActionEvent -> {
                 phoneBinder.removeBinding(txtPhoneNo);
                 phoneBinder.removeBinding(selectPhoneType);
-                dialog.isCloseOnOutsideClick();
-            });
+                dialog.isCloseOnOutsideClick(); });
 
             btnDeletePhone.addClickListener(buttonClickEvent -> {
                 phoneService.delete(phone);
                 dialog.close();
-                UI.getCurrent().getPage().reload();
-            });
+                UI.getCurrent().getPage().reload(); });
 
             btnUpdatePhone.addClickListener(buttonClickEvent -> {
                 phoneService.update(phone,selectPhoneType.getValue(),txtPhoneNo.getValue());
                 dialog.close();
-                UI.getCurrent().getPage().reload();
-            });
+                UI.getCurrent().getPage().reload(); });
         });
         //---------------------------------------ADDRESS-------------------------------------------------
         addAddress.addClickListener(iconClickEvent -> {
             dialog.removeAll();
             dialog.add(divAdress,btnCancelAddress,btnSaveAddress);
             dialog.open();
+
             btnCancelAddress.addClickListener(buttonClickEvent -> {
                 selectAddressType.setValue("Ev");
                 txtAddress.setValue("");
-                dialog.close();
-            });
+                dialog.close(); });
         });
 
         addressGrid.addItemClickListener(addressItemClickEvent -> {
@@ -224,20 +219,17 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
             dialog.addDialogCloseActionListener(dialogCloseActionEvent -> {
                 addressBinder.removeBinding(txtAddress);
                 addressBinder.removeBinding(selectAddressType);
-                dialog.isCloseOnOutsideClick();
-            });
+                dialog.isCloseOnOutsideClick(); });
 
             btnDeleteAddress.addClickListener(buttonClickEvent -> {
                 addressService.delete(address);
                 dialog.close();
-                UI.getCurrent().getPage().reload();
-            });
+                UI.getCurrent().getPage().reload(); });
 
             btnUpdateAddress.addClickListener(buttonClickEvent -> {
                 addressService.update(address,selectAddressType.getValue(),txtAddress.getValue());
                 dialog.close();
-                UI.getCurrent().getPage().reload();
-            });
+                UI.getCurrent().getPage().reload(); });
         });
         //---------------------------------------------SOCIAL-MEDIA----------------------------------------------
         addSocialMedia.addClickListener(iconClickEvent -> {
@@ -248,8 +240,7 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
             btnCancelSocialMedia.addClickListener(buttonClickEvent -> {
                 dialog.close();
                 txtSocialMediaLink.setValue("");
-                selectSocialMediaType.setValue("Facebook");
-            });
+                selectSocialMediaType.setValue("Facebook"); });
         });
 
         socialMediaGrid.addItemClickListener(addressItemClickEvent -> {
@@ -266,20 +257,17 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
             dialog.addDialogCloseActionListener(dialogCloseActionEvent -> {
                 socialMediaBinder.removeBinding(txtSocialMediaLink);
                 socialMediaBinder.removeBinding(selectSocialMediaType);
-                dialog.isCloseOnOutsideClick();
-            });
+                dialog.isCloseOnOutsideClick(); });
 
             btnDeleteSocialMedia.addClickListener(buttonClickEvent -> {
                 socialMediaService.delete(socialMedia);
                 dialog.close();
-                UI.getCurrent().getPage().reload();
-            });
+                UI.getCurrent().getPage().reload(); });
 
             btnUpdateSocialMedia.addClickListener(buttonClickEvent -> {
                 socialMediaService.update(socialMedia,selectSocialMediaType.getValue(),txtSocialMediaLink.getValue());
                 dialog.close();
-                UI.getCurrent().getPage().reload();
-            });
+                UI.getCurrent().getPage().reload(); });
         });
     }
 
@@ -298,8 +286,8 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
 
         userImg = new Image(streamResource, "");
         if(newContact.getImage() == null){
-            userImg = new Image("/images/user.png", "Resim Yok");
-        }
+            userImg = new Image("/images/user.png", "Resim Yok"); }
+
         userImg.setClassName("userImg");
         upload.setAcceptedFileTypes("image/jpeg", "image/png", "image/gif");
         upload.setMaxFiles(1);
@@ -313,8 +301,7 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
                 contactService.updateImage(newContact,imageBytes);
                 UI.getCurrent().getPage().reload();
             } catch (IOException e) {
-                e.printStackTrace();
-            }
+                e.printStackTrace(); }
         });
 
         setPhoneGridColumns();
@@ -327,21 +314,23 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
         binder.readBean(newContact);
         //------------------------------------PHONE-----------------------------------------
         btnSavePhone.addClickListener(buttonClickEvent -> {
-            Binder<Phone> phoneBinder = new Binder();
-            Phone phone = new Phone();
-            phoneBinder.bind(txtPhoneNo,Phone::getNo,Phone::setNo);
-            phoneBinder.bind(selectPhoneType,Phone::getType,Phone::setType);
-            try {
-                phoneBinder.writeBean(phone);
-            } catch (ValidationException e) {
-                e.printStackTrace();
-            }
-            phone.setId(newID);
-            phone.setContact(newContact);
-            phoneService.save(phone);
-            contactService.update(newContact,firstName.getValue(),lastName.getValue(),company.getValue());
-            UI.getCurrent().getPage().reload();
-            binderBind();
+            if (txtPhoneNo.getValue().equals("")){
+                Notification.show("Lütfen Telefon Giriniz");
+            }else {
+                Binder<Phone> phoneBinder = new Binder();
+                Phone phone = new Phone();
+                phoneBinder.bind(txtPhoneNo, Phone::getNo, Phone::setNo);
+                phoneBinder.bind(selectPhoneType, Phone::getType, Phone::setType);
+                try {
+                    phoneBinder.writeBean(phone);
+                } catch (ValidationException e) {
+                    e.printStackTrace(); }
+                phone.setId(newID);
+                phone.setContact(newContact);
+                phoneService.save(phone);
+                contactService.update(newContact, firstName.getValue(), lastName.getValue(), company.getValue());
+                UI.getCurrent().getPage().reload();
+                binderBind(); }
         });
 
         btnSaveAddress.addClickListener(buttonClickEvent -> {
@@ -355,15 +344,14 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
                 try {
                     addressBinder.writeBean(address);
                 } catch (ValidationException e) {
-                    e.printStackTrace();
-                }
+                    e.printStackTrace(); }
+
                 address.setId(newID);
                 address.setContact(newContact);
                 addressService.save(address);
                 contactService.update(newContact, firstName.getValue(), lastName.getValue(), company.getValue());
                 UI.getCurrent().getPage().reload();
-                binderBind();
-            }
+                binderBind(); }
         });
         //-----------------------------------SOCIAL-MEDIA------------------------------------------
         btnSaveSocialMedia.addClickListener(buttonClickEvent -> {
@@ -377,15 +365,13 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
                 try {
                     socialMediaBinder.writeBean(socialMedia);
                 } catch (ValidationException e) {
-                    e.printStackTrace();
-                }
+                    e.printStackTrace(); }
                 socialMedia.setId(newID);
                 socialMedia.setContact(newContact);
                 socialMediaService.save(socialMedia);
                 contactService.update(newContact, firstName.getValue(), lastName.getValue(), company.getValue());
                 UI.getCurrent().getPage().reload();
-                binderBind();
-            }
+                binderBind(); }
         });
         //------------------------------------CONTACT---------------------------
 
@@ -394,8 +380,7 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
             addressService.deleteAddresses(addressSet);
             socialMediaService.deleteSocialMedias(socialMediaSet);
             contactService.delete(newContact);
-            UI.getCurrent().getPage().setLocation("user/" + userID + "/contacts");
-        });
+            UI.getCurrent().getPage().setLocation("user/" + userID + "/contacts"); });
 
         btnSaveContact.addClickListener(buttonClickEvent -> {
             if(firstName.getValue().equals("")){
@@ -404,9 +389,7 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
                 Notification.show("Lütfen soyad giriniz!");
             }else{
                 contactService.update(newContact,firstName.getValue(),lastName.getValue(),company.getValue());
-                UI.getCurrent().getPage().setLocation("user/" + userID + "/contacts");
-            }
-        });
+                UI.getCurrent().getPage().setLocation("user/" + userID + "/contacts"); } });
 
         imgUpload.add(userImg,upload);
         horizontalLayout.add(btnCancelContact,btnSaveContact);

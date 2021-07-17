@@ -24,7 +24,6 @@ public class Contact {
 
     @Lob
     private  byte[] image;
-    private  String imageUrl;
 
     @ManyToOne
     private User user;

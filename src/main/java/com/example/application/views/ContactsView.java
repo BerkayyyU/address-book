@@ -13,7 +13,6 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
@@ -61,23 +60,19 @@ public class ContactsView extends VerticalLayout implements BeforeEnterObserver 
         grid.setClassName("contacts-grid");
 
         btnLogOut.addClickListener(buttonClickEvent -> {
-            UI.getCurrent().getPage().setLocation("/");
-        });
+            UI.getCurrent().getPage().setLocation("/"); });
 
         search.addValueChangeListener(textFieldStringComponentValueChangeEvent -> {
-            searchContacts(search.getValue());
-        });
+            searchContacts(search.getValue()); });
 
         grid.addItemClickListener(contactItemClickEvent -> {
-             contactID = String.valueOf(contactItemClickEvent.getItem().getId());
-            UI.getCurrent().getPage().setLocation("user/" + userID + "/contacts/" + contactID + "/contact-details");
-        });
+            contactID = String.valueOf(contactItemClickEvent.getItem().getId());
+            UI.getCurrent().getPage().setLocation("user/" + userID + "/contacts/" + contactID + "/contact-details"); });
 
         searchAndAdd.add(search, iconAdd);
         usernameAndLogOut.add(lblUsername,btnLogOut);
         contactsDiv.add(usernameAndLogOut,searchAndAdd,grid);
         add(contactsDiv);
-
     }
 
     @Override
@@ -91,23 +86,20 @@ public class ContactsView extends VerticalLayout implements BeforeEnterObserver 
             setGridColumns();
         }else{
             setGridColumns();
-            grid.setItems(contactList);
-        }
+            grid.setItems(contactList); }
 
         iconAdd.addClickListener(iconClickEvent -> {
             Contact contactNew = new Contact();
             contactNew.setUser(user);
             contactService.save(contactNew);
             Long newContactId = contactNew.getId();
-            UI.getCurrent().getPage().setLocation("user/"+ userID + "/contacts/new-contact/" + newContactId);
-        });
+            UI.getCurrent().getPage().setLocation("user/"+ userID + "/contacts/new-contact/" + newContactId); });
     }
 
     private void searchContacts(String filter){
         List<Contact> contactListFiltered = new ArrayList<>();
         contactListFiltered.addAll(contactService.getContacts(filter));
-        grid.setItems(contactListFiltered);
-    }
+        grid.setItems(contactListFiltered); }
 
     private void setGridColumns(){
         grid.addColumn(Contact::getFirstName).setHeader("");
@@ -117,8 +109,5 @@ public class ContactsView extends VerticalLayout implements BeforeEnterObserver 
         grid.removeColumnByKey("firstName");
         grid.removeColumnByKey("lastName");
         grid.removeColumnByKey("company");
-        grid.removeColumnByKey("image");
-        grid.removeColumnByKey("imageUrl");
-
-    }
+        grid.removeColumnByKey("image"); }
 }
