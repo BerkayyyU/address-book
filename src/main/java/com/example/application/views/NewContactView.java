@@ -299,6 +299,7 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
                 StreamResource streamResource2 = new StreamResource("vaadin-logo.png", () -> new ByteArrayInputStream(imageBytes));
                 streamResource2.setContentType("image/png");
                 contactService.updateImage(newContact,imageBytes);
+                contactService.update(newContact, firstName.getValue(), lastName.getValue(), company.getValue());
                 UI.getCurrent().getPage().reload();
             } catch (IOException e) {
                 e.printStackTrace(); }

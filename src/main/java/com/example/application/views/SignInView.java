@@ -30,6 +30,7 @@ public class SignInView extends VerticalLayout {
     EmailField email = new EmailField("Email:");
     PasswordField password = new PasswordField("Şifre:");
     Button btnSignIn = new Button("Kayıt Ol");
+    Boolean userNameOrEmailAlreadysExists;
 
     public SignInView(UserService userService){
         this.userService = userService;
@@ -45,28 +46,33 @@ public class SignInView extends VerticalLayout {
         btnSignIn.setClassName("login-signin");
 
         btnSignIn.addClickListener(buttonClickEvent -> {
+            userNameOrEmailAlreadysExists=false;
             userList.forEach(user -> {
                 if(username.getValue().equals(user.getName())){
                     Notification.show("Kullanıcı Adı Başka Bir Kullanıcı Tarafından kullanılmaktadır!");
+                    userNameOrEmailAlreadysExists = true;
                 }else if(email.getValue().equals(user.getEmail())){
                     Notification.show("Email Başka Bir Kullanıcı Tarafından Kullanılmaktadır!");
-                }else{
-                    if(username.getValue().equals("")){
-                        Notification.show("Lütfen Kullanıcı Adı Giriniz!");
-                    }else if(email.getValue().equals("")){
-                        Notification.show("Lütfen Email Giriniz!");
-                    }else if(password.getValue().equals("")){
-                        Notification.show("Lütfen Şifre Giriniz!");
-                    }else{
-                        User newUser = new User();
-                        newUser.setEmail(email.getValue());
-                        newUser.setName(username.getValue());
-                        newUser.setPassword(password.getValue());
-                        userService.save(newUser);
-                        UI.getCurrent().getPage().setLocation("/");
-                    }
+                    userNameOrEmailAlreadysExists = true;
                 }
             });
+            if(userNameOrEmailAlreadysExists==false){
+                if(username.getValue().equals("")){
+                    Notification.show("Lütfen Kullanıcı Adı Giriniz!");
+                }else if(email.getValue().equals("")){
+                    Notification.show("Lütfen Email Giriniz!");
+                }else if(password.getValue().equals("")){
+                    Notification.show("Lütfen Şifre Giriniz!");
+                }else{
+                    User newUser = new User();
+                    newUser.setEmail(email.getValue());
+                    newUser.setName(username.getValue());
+                    newUser.setPassword(password.getValue());
+                    userService.save(newUser);
+                    UI.getCurrent().getPage().setLocation("/");
+                }
+            }
+
         });
 
         verticalLayout.add(username,email,password,btnSignIn);
