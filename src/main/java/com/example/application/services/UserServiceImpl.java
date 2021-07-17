@@ -5,6 +5,7 @@ import com.example.application.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -13,6 +14,11 @@ public class UserServiceImpl implements UserService{
 
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    @Override
+    public List<User> getUsers() {
+        return userRepository.findAll();
     }
 
     @Override

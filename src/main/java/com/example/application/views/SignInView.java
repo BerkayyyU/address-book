@@ -15,6 +15,8 @@ import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 
+import java.util.List;
+
 @Route("signin")
 @CssImport("./styles/AdresDefteri.css")
 public class SignInView extends VerticalLayout {
@@ -32,6 +34,8 @@ public class SignInView extends VerticalLayout {
     public SignInView(UserService userService){
         this.userService = userService;
 
+        List<User> userList = userService.getUsers();
+
         btnSignIn.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
         signInDiv.setClassName("signin-login-view");
         adresDefteri.setClassName("adres-defteri-header");
@@ -41,25 +45,36 @@ public class SignInView extends VerticalLayout {
         btnSignIn.setClassName("login-signin");
 
         btnSignIn.addClickListener(buttonClickEvent -> {
-            if(username.getValue().equals("")){
-                Notification.show("Lütfen kullanıcı adı giriniz!");
-            }else if(email.getValue().equals("")){
-                Notification.show("Lütfen email giriniz!");
-            }else if(password.getValue().equals("")){
-                Notification.show("Lütfen şifre giriniz!");
-            }else{
-                User newUser = new User();
-                newUser.setEmail(email.getValue());
-                newUser.setName(username.getValue());
-                newUser.setPassword(password.getValue());
-                userService.save(newUser);
-                UI.getCurrent().getPage().setLocation("/");
-            }
+            userList.forEach(user -> {
+                if(username.getValue().equals(user.getName())){
+                    Notification.show("Kullanıcı Adı Başka Bir Kullanıcı Tarafından kullanılmaktadır!");
+                }else if(email.getValue().equals(user.getEmail())){
+                    Notification.show("Email Başka Bir Kullanıcı Tarafından Kullanılmaktadır!");
+                }else{
+                    if(username.getValue().equals("")){
+                        Notification.show("Lütfen Kullanıcı Adı Giriniz!");
+                    }else if(email.getValue().equals("")){
+                        Notification.show("Lütfen Email Giriniz!");
+                    }else if(password.getValue().equals("")){
+                        Notification.show("Lütfen Şifre Giriniz!");
+                    }else{
+                        User newUser = new User();
+                        newUser.setEmail(email.getValue());
+                        newUser.setName(username.getValue());
+                        newUser.setPassword(password.getValue());
+                        userService.save(newUser);
+                        UI.getCurrent().getPage().setLocation("/");
+                    }
+                }
+            });
         });
 
         verticalLayout.add(username,email,password,btnSignIn);
         signInDiv.add(verticalLayout);
         add(adresDefteri,signInDiv);
+    }
+
+    private void checkUserNameAndEmail(){
 
     }
 }
