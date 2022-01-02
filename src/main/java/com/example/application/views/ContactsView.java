@@ -1,7 +1,7 @@
 package com.example.application.views;
 
 import com.example.application.models.Contact;
-import com.example.application.models.User;
+import com.example.application.models.WebsiteUser;
 import com.example.application.services.ContactService;
 import com.example.application.services.UserService;
 import com.vaadin.flow.component.UI;
@@ -78,9 +78,9 @@ public class ContactsView extends VerticalLayout implements BeforeEnterObserver 
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
         userID = beforeEnterEvent.getRouteParameters().get("userID").get();
-        Set<Contact> contactList = contactService.getContactsByUserId(Long.valueOf(userID));
-        User user = userService.getUserById(Long.valueOf(userID));
-        lblUsername.setText(user.getName());
+        Set<Contact> contactList = contactService.getContactsByWebsiteUserId(Long.valueOf(userID));
+        WebsiteUser websiteUser = userService.getUserById(Long.valueOf(userID));
+        lblUsername.setText(websiteUser.getName());
 
         if(contactList==null){
             setGridColumns();
@@ -90,7 +90,7 @@ public class ContactsView extends VerticalLayout implements BeforeEnterObserver 
 
         iconAdd.addClickListener(iconClickEvent -> {
             Contact contactNew = new Contact();
-            contactNew.setUser(user);
+            contactNew.setWebsiteUser(websiteUser);
             contactService.save(contactNew);
             Long newContactId = contactNew.getId();
             UI.getCurrent().getPage().setLocation("user/"+ userID + "/contacts/new-contact/" + newContactId); });
@@ -105,7 +105,7 @@ public class ContactsView extends VerticalLayout implements BeforeEnterObserver 
         grid.addColumn(Contact::getFirstName).setHeader("");
         grid.addColumn(Contact::getLastName).setHeader("");
         grid.removeColumnByKey("id");
-        grid.removeColumnByKey("user");
+        grid.removeColumnByKey("websiteUser");
         grid.removeColumnByKey("firstName");
         grid.removeColumnByKey("lastName");
         grid.removeColumnByKey("company");

@@ -276,7 +276,7 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
         String newContactID = beforeEnterEvent.getRouteParameters().get("newContactId").get();
         userID = beforeEnterEvent.getRouteParameters().get("userID").get();
 
-        Contact newContact = contactService.getContactByIdAndUserId(Long.valueOf(newContactID),Long.valueOf(userID));
+        Contact newContact = contactService.getContactByIdAndWebsiteUserId(Long.valueOf(newContactID),Long.valueOf(userID));
         Set<Phone> phoneSet = phoneService.getPhoneList(Long.valueOf(newContactID));
         Set<Address> addressSet = addressService.getAddressList(Long.valueOf(newContactID));
         Set<SocialMedia> socialMediaSet = socialMediaService.getSocialMediaList(Long.valueOf(newContactID));

@@ -1,12 +1,12 @@
 package com.example.application.services;
 
-import com.example.application.models.User;
+import com.example.application.models.WebsiteUser;
 
 import java.util.List;
 
 public interface UserService {
-    List<User> getUsers();
-    User login(String email, String password);
-    User save(User user);
-    User getUserById(Long id);
+    List<WebsiteUser> getUsers();
+    WebsiteUser login(String email, String password);
+    WebsiteUser save(WebsiteUser websiteUser);
+    WebsiteUser getUserById(Long id);
 }

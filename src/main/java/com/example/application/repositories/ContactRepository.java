@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ContactRepository extends CrudRepository<Contact,Long> {
     List<Contact> findByFirstNameContainingOrLastNameContaining(String firstName, String lastName);
-    List<Contact> findContactsByUserId(Long id);
-    Contact findContactByIdAndUserId(Long contactID, Long userID );
+    List<Contact> findContactsByWebsiteUserId(Long id);
+    Contact findContactByIdAndWebsiteUserId(Long contactID, Long website );
 
 }

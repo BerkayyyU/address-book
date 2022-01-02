@@ -29,15 +29,15 @@ public class ContactServiceImpl implements ContactService{
     }
 
     @Override
-    public  Set<Contact> getContactsByUserId(Long id) {
+    public  Set<Contact> getContactsByWebsiteUserId(Long id) {
         Set<Contact> contactSet = new HashSet<>();
-        contactRepository.findContactsByUserId(id).iterator().forEachRemaining(contactSet::add);
+        contactRepository.findContactsByWebsiteUserId(id).iterator().forEachRemaining(contactSet::add);
         return contactSet;
     }
 
     @Override
-    public Contact getContactByIdAndUserId(Long contactID, Long userID) {
-        return contactRepository.findContactByIdAndUserId(contactID,userID);
+    public Contact getContactByIdAndWebsiteUserId(Long contactID, Long websiteUserID) {
+        return contactRepository.findContactByIdAndWebsiteUserId(contactID,websiteUserID);
     }
 
     @Override

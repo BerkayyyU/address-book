@@ -8,7 +8,7 @@ import java.util.Set;
 
 @Entity
 @Data
-public class User {
+public class WebsiteUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,6 +17,6 @@ public class User {
     private String email;
     private String password;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy ="user")
+    @OneToMany(cascade = CascadeType.ALL)
     private Set<Contact> contacts = new HashSet<>();
 }

@@ -1,6 +1,6 @@
 package com.example.application.views;
 
-import com.example.application.models.User;
+import com.example.application.models.WebsiteUser;
 import com.example.application.services.UserService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -47,9 +47,9 @@ public class LoginView extends VerticalLayout {
         //img.setSrc("images/user.png");
 
         btnLogin.addClickListener(buttonClickEvent -> {
-            User user = userService.login(email.getValue(),password.getValue());
-            if(user.getId()!=null){
-                UI.getCurrent().getPage().setLocation("user/"+ user.getId()+ "/contacts");
+            WebsiteUser websiteUser = userService.login(email.getValue(),password.getValue());
+            if(websiteUser.getId()!=null){
+                UI.getCurrent().getPage().setLocation("user/"+ websiteUser.getId()+ "/contacts");
             }else{
                 Notification.show("Invalid login information!");
             }

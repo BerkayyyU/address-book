@@ -1,6 +1,6 @@
 package com.example.application.services;
 
-import com.example.application.models.User;
+import com.example.application.models.WebsiteUser;
 import com.example.application.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -16,26 +16,26 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public List<User> getUsers() {
+    public List<WebsiteUser> getUsers() {
         return userRepository.findAll();
     }
 
     @Override
-    public User login(String email, String password) {
-        List<User> user = userRepository.findByEmailAndPassword(email, password);
-        if (user.size()==0){
-            return new User();
+    public WebsiteUser login(String email, String password) {
+        List<WebsiteUser> websiteUser = userRepository.findByEmailAndPassword(email, password);
+        if (websiteUser.size()==0){
+            return new WebsiteUser();
         }
-        return user.get(0);
+        return websiteUser.get(0);
     }
 
     @Override
-    public User save(User user) {
-        return userRepository.save(user);
+    public WebsiteUser save(WebsiteUser websiteUser) {
+        return userRepository.save(websiteUser);
     }
 
     @Override
-    public User getUserById(Long id) {
+    public WebsiteUser getUserById(Long id) {
         return userRepository.findUserById(id);
     }
 

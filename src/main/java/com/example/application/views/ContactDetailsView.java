@@ -168,7 +168,7 @@ public class ContactDetailsView extends VerticalLayout implements  BeforeEnterOb
         contactID = beforeEnterEvent.getRouteParameters().get("contactID").get();
         userID = beforeEnterEvent.getRouteParameters().get("userID").get();
 
-        Contact contact = contactService.getContactByIdAndUserId(Long.valueOf(contactID),Long.valueOf(userID));
+        Contact contact = contactService.getContactByIdAndWebsiteUserId(Long.valueOf(contactID),Long.valueOf(userID));
         Set<Phone> phoneSet = phoneService.getPhoneList(Long.valueOf(contactID));
         Set<Address> addressSet = addressService.getAddressList(Long.valueOf(contactID));
         Set<SocialMedia> socialMediaSet = socialMediaService.getSocialMediaList(Long.valueOf(contactID));

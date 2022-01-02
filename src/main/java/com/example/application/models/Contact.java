@@ -12,7 +12,6 @@ import javax.persistence.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = {"user"})
 public class Contact {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +25,7 @@ public class Contact {
     private  byte[] image;
 
     @ManyToOne
-    private User user;
+    private WebsiteUser websiteUser;
 
 
 }

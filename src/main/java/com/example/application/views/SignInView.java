@@ -1,6 +1,6 @@
 package com.example.application.views;
 
-import com.example.application.models.User;
+import com.example.application.models.WebsiteUser;
 import com.example.application.services.UserService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -35,7 +35,7 @@ public class SignInView extends VerticalLayout {
     public SignInView(UserService userService){
         this.userService = userService;
 
-        List<User> userList = userService.getUsers();
+        List<WebsiteUser> websiteUserList = userService.getUsers();
 
         btnSignIn.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
         signInDiv.setClassName("signin-login-view");
@@ -47,7 +47,7 @@ public class SignInView extends VerticalLayout {
 
         btnSignIn.addClickListener(buttonClickEvent -> {
             userNameOrEmailAlreadysExists=false;
-            userList.forEach(user -> {
+            websiteUserList.forEach(user -> {
                 if(username.getValue().equals(user.getName())){
                     Notification.show("Username already exists!");
                     userNameOrEmailAlreadysExists = true;
@@ -64,11 +64,11 @@ public class SignInView extends VerticalLayout {
                 }else if(password.getValue().equals("")){
                     Notification.show("Please enter a valid password!");
                 }else{
-                    User newUser = new User();
-                    newUser.setEmail(email.getValue());
-                    newUser.setName(username.getValue());
-                    newUser.setPassword(password.getValue());
-                    userService.save(newUser);
+                    WebsiteUser newWebsiteUser = new WebsiteUser();
+                    newWebsiteUser.setEmail(email.getValue());
+                    newWebsiteUser.setName(username.getValue());
+                    newWebsiteUser.setPassword(password.getValue());
+                    userService.save(newWebsiteUser);
                     UI.getCurrent().getPage().setLocation("/");
                 }
             }
