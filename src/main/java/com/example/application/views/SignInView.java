@@ -24,12 +24,12 @@ public class SignInView extends VerticalLayout {
     private final UserService userService;
 
     Div signInDiv = new Div();
-    Label adresDefteri = new Label("Adres Defteri");
+    Label adresDefteri = new Label("Address Book");
     VerticalLayout verticalLayout = new VerticalLayout();
-    TextField username = new TextField("Kullanıcı adı:");
+    TextField username = new TextField("Username:");
     EmailField email = new EmailField("Email:");
-    PasswordField password = new PasswordField("Şifre:");
-    Button btnSignIn = new Button("Kayıt Ol");
+    PasswordField password = new PasswordField("Password:");
+    Button btnSignIn = new Button("Sign In");
     Boolean userNameOrEmailAlreadysExists;
 
     public SignInView(UserService userService){
@@ -49,20 +49,20 @@ public class SignInView extends VerticalLayout {
             userNameOrEmailAlreadysExists=false;
             userList.forEach(user -> {
                 if(username.getValue().equals(user.getName())){
-                    Notification.show("Kullanıcı Adı Başka Bir Kullanıcı Tarafından kullanılmaktadır!");
+                    Notification.show("Username already exists!");
                     userNameOrEmailAlreadysExists = true;
                 }else if(email.getValue().equals(user.getEmail())){
-                    Notification.show("Email Başka Bir Kullanıcı Tarafından Kullanılmaktadır!");
+                    Notification.show("Email already exists");
                     userNameOrEmailAlreadysExists = true;
                 }
             });
             if(userNameOrEmailAlreadysExists==false){
                 if(username.getValue().equals("")){
-                    Notification.show("Lütfen Kullanıcı Adı Giriniz!");
+                    Notification.show("Please enter a valid username!");
                 }else if(email.getValue().equals("")){
-                    Notification.show("Lütfen Email Giriniz!");
+                    Notification.show("Please enter a valid email!");
                 }else if(password.getValue().equals("")){
-                    Notification.show("Lütfen Şifre Giriniz!");
+                    Notification.show("Please enter a valid password!");
                 }else{
                     User newUser = new User();
                     newUser.setEmail(email.getValue());

@@ -54,15 +54,15 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
     Div divLastName = new Div();
     Div divCompany = new Div();
     Div divPhone = new Div();
-    Div divAdress = new Div();
+    Div divAddress = new Div();
     Div divSocialMedia = new Div();
 
-    Label lblFirstName = new Label("Ad:");
-    Label lblLastName = new Label("Soyad:");
-    Label lblCompany = new Label("Şirket:");
-    Label adres = new Label("Adres");
-    Label telefon = new Label("Telefon");
-    Label sosyalMedya = new Label("Sosyal Medya");
+    Label lblFirstName = new Label("First Name:");
+    Label lblLastName = new Label("Last Name:");
+    Label lblCompany = new Label("Company:");
+    Label address = new Label("Address");
+    Label phone = new Label("Phone");
+    Label socialProfile = new Label("Social Profile");
 
     TextField firstName = new TextField( );
     TextField lastName = new TextField();
@@ -78,24 +78,24 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
     Grid<Phone> phoneGrid = new Grid(Phone.class);
     Grid<SocialMedia> socialMediaGrid = new Grid(SocialMedia.class);
 
-    Select<String> selectPhoneType = new Select<>("Mobil","Ev","İş","Fax");
-    Select<String> selectAddressType = new Select<>("Ev","İş","Diğer");
-    Select<String> selectSocialMediaType = new Select<>("Facebook","Twitter","İnstagram","Linkedin");
+    Select<String> selectPhoneType = new Select<>("Mobile","Home","Work","Fax");
+    Select<String> selectAddressType = new Select<>("Home","Work","Other");
+    Select<String> selectSocialMediaType = new Select<>("Facebook","Twitter","Instagram","Linkedin");
 
-    Button btnDeletePhone = new Button("Sil");
-    Button btnUpdatePhone = new Button("Güncelle");
-    Button btnCancelPhone = new Button("İptal");
-    Button btnSavePhone = new Button("Kaydet");
-    Button btnDeleteAddress = new Button("Sil");
-    Button btnUpdateAddress = new Button("Güncelle");
-    Button btnCancelAddress = new Button("İptal");
-    Button btnSaveAddress = new Button("Kaydet");
-    Button btnDeleteSocialMedia = new Button("Sil");
-    Button btnUpdateSocialMedia = new Button("Güncelle");
-    Button btnCancelSocialMedia = new Button("İptal");
-    Button btnSaveSocialMedia = new Button("Kaydet");
-    Button btnSaveContact = new Button("Kaydet");
-    Button btnCancelContact = new Button("İptal");
+    Button btnDeletePhone = new Button("Delete");
+    Button btnUpdatePhone = new Button("Update");
+    Button btnCancelPhone = new Button("Cancel");
+    Button btnSavePhone = new Button("Save");
+    Button btnDeleteAddress = new Button("Delete");
+    Button btnUpdateAddress = new Button("Update");
+    Button btnCancelAddress = new Button("Cancel");
+    Button btnSaveAddress = new Button("Save");
+    Button btnDeleteSocialMedia = new Button("Delete");
+    Button btnUpdateSocialMedia = new Button("Update");
+    Button btnCancelSocialMedia = new Button("Cancel");
+    Button btnSaveSocialMedia = new Button("Save");
+    Button btnSaveContact = new Button("Save");
+    Button btnCancelContact = new Button("Cancel");
 
     Dialog dialog = new Dialog();
 
@@ -103,9 +103,9 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
     Icon addAddress = new Icon(VaadinIcon.PLUS);
     Icon addSocialMedia = new Icon(VaadinIcon.PLUS);
 
-    Div phoneHeaderAndAdd = new Div(telefon,addPhone);
-    Div addressHeaderAndAdd = new Div(adres,addAddress);
-    Div socialMediaHeaderAndAdd = new Div(sosyalMedya, addSocialMedia);
+    Div phoneHeaderAndAdd = new Div(phone,addPhone);
+    Div addressHeaderAndAdd = new Div(address,addAddress);
+    Div socialMediaHeaderAndAdd = new Div(socialProfile, addSocialMedia);
 
     public NewContactView(ContactService contactService, UserService userService, PhoneService phoneService, AddressService addressService, SocialMediaService socialMediaService){
 
@@ -117,8 +117,8 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
 
         binderBind();
 
-        selectPhoneType.setValue("Mobil");
-        selectAddressType.setValue("Ev");
+        selectPhoneType.setValue("Mobile");
+        selectAddressType.setValue("Home");
         selectSocialMediaType.setValue("Facebook");
         imgUpload.setClassName("img-upload");
         newContactDiv.setClassName("contactdetails-newcontact-view");
@@ -150,9 +150,9 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
             grid.setHeight("300px"); }
         for(Div div : new Div[]{phoneHeaderAndAdd,addressHeaderAndAdd,socialMediaHeaderAndAdd}){
             div.setClassName("space-between"); }
-        for(Div div : new Div[]{divPhone,divAdress,divSocialMedia}){
+        for(Div div : new Div[]{divPhone,divAddress,divSocialMedia}){
             div.setClassName("div-phone-address-socialMedia"); }
-        for(Label label : new Label[]{adres,telefon,sosyalMedya}){
+        for(Label label : new Label[]{address,phone,socialProfile}){
             label.setClassName("telefon-adres-sosyalmedya-header"); }
 
         //---------------------------------------PHONE-------------------------------------------
@@ -162,7 +162,7 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
             dialog.open();
 
             btnCancelPhone.addClickListener(buttonClickEvent -> {
-                selectPhoneType.setValue("Mobil");
+                selectPhoneType.setValue("Mobile");
                 txtPhoneNo.setValue("");
                 dialog.close(); });
         });
@@ -196,7 +196,7 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
         //---------------------------------------ADDRESS-------------------------------------------------
         addAddress.addClickListener(iconClickEvent -> {
             dialog.removeAll();
-            dialog.add(divAdress,btnCancelAddress,btnSaveAddress);
+            dialog.add(divAddress,btnCancelAddress,btnSaveAddress);
             dialog.open();
 
             btnCancelAddress.addClickListener(buttonClickEvent -> {
@@ -207,7 +207,7 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
 
         addressGrid.addItemClickListener(addressItemClickEvent -> {
             dialog.removeAll();
-            dialog.add(divAdress,btnDeleteAddress,btnUpdateAddress);
+            dialog.add(divAddress,btnDeleteAddress,btnUpdateAddress);
             dialog.open();
 
             Address address = addressService.getAddress(addressItemClickEvent.getItem().getId());
@@ -286,7 +286,7 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
 
         userImg = new Image(streamResource, "");
         if(newContact.getImage() == null){
-            userImg = new Image("/images/user.png", "Resim Yok"); }
+            userImg = new Image("/images/user.png", "No Image"); }
 
         userImg.setClassName("userImg");
         upload.setAcceptedFileTypes("image/jpeg", "image/png", "image/gif");
@@ -316,7 +316,7 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
         //------------------------------------PHONE-----------------------------------------
         btnSavePhone.addClickListener(buttonClickEvent -> {
             if (txtPhoneNo.getValue().equals("")){
-                Notification.show("Lütfen Telefon Giriniz");
+                Notification.show("Please enter a valid phone number!");
             }else {
                 Binder<Phone> phoneBinder = new Binder();
                 Phone phone = new Phone();
@@ -336,7 +336,7 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
 
         btnSaveAddress.addClickListener(buttonClickEvent -> {
             if (txtAddress.getValue().equals("")){
-                Notification.show("Lütfen Adres Giriniz");
+                Notification.show("Please enter an address!");
             }else {
                 Binder<Address> addressBinder = new Binder();
                 Address address = new Address();
@@ -357,7 +357,7 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
         //-----------------------------------SOCIAL-MEDIA------------------------------------------
         btnSaveSocialMedia.addClickListener(buttonClickEvent -> {
             if (txtSocialMediaLink.getValue().equals("")){
-                Notification.show("Lütfen Link Giriniz");
+                Notification.show("Please enter a valid link!");
             }else {
                 Binder<SocialMedia> socialMediaBinder = new Binder();
                 SocialMedia socialMedia = new SocialMedia();
@@ -385,9 +385,9 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
 
         btnSaveContact.addClickListener(buttonClickEvent -> {
             if(firstName.getValue().equals("")){
-                Notification.show("Lütfen ad giriniz!");
+                Notification.show("Please enter a first name!");
             }else if (lastName.getValue().equals("")){
-                Notification.show("Lütfen soyad giriniz!");
+                Notification.show("Please enter a last name!");
             }else{
                 contactService.update(newContact,firstName.getValue(),lastName.getValue(),company.getValue());
                 UI.getCurrent().getPage().setLocation("user/" + userID + "/contacts"); } });
@@ -409,7 +409,7 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
         divLastName.add(lblLastName,lastName);
         divCompany.add(lblCompany,company);
         divPhone.add(selectPhoneType,txtPhoneNo);
-        divAdress.add(selectAddressType,txtAddress);
+        divAddress.add(selectAddressType,txtAddress);
         divSocialMedia.add(selectSocialMediaType,txtSocialMediaLink); }
 
     private void setPhoneGridColumns(){

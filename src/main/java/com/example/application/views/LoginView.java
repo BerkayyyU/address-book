@@ -25,12 +25,12 @@ public class LoginView extends VerticalLayout {
     private final UserService userService;
 
     Div loginDiv = new Div();
-    Label adresDefteri = new Label("Adres Defteri");
+    Label addressBook = new Label("Address Book");
     VerticalLayout verticalLayout = new VerticalLayout();
-    EmailField email = new EmailField("Email giriniz:");
-    PasswordField password = new PasswordField("Şifre giriniz:");
-    Button btnLogin = new Button("Giriş yap");
-    Anchor anchor = new Anchor("/signin","Hesabınız yok mu?");
+    EmailField email = new EmailField("Email:");
+    PasswordField password = new PasswordField("Password");
+    Button btnLogin = new Button("Login");
+    Anchor anchor = new Anchor("/signin","Don't have an account?");
     //Image img = new Image();
 
     public LoginView(UserService userService){
@@ -39,7 +39,7 @@ public class LoginView extends VerticalLayout {
         btnLogin.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
 
         loginDiv.setClassName("signin-login-view");
-        adresDefteri.setClassName("adres-defteri-header");
+        addressBook.setClassName("adres-defteri-header");
         email.setClassName("user-info-textfields");
         password.setClassName("user-info-textfields");
         btnLogin.setClassName("login-signin");
@@ -51,12 +51,12 @@ public class LoginView extends VerticalLayout {
             if(user.getId()!=null){
                 UI.getCurrent().getPage().setLocation("user/"+ user.getId()+ "/contacts");
             }else{
-                Notification.show("Hatalı giriş!");
+                Notification.show("Invalid login information!");
             }
         });
 
         verticalLayout.add(email,password,btnLogin,anchor);
         loginDiv.add(verticalLayout);
-        add(adresDefteri,loginDiv);
+        add(addressBook,loginDiv);
     }
 }

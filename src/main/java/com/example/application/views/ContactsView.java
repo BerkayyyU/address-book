@@ -29,9 +29,9 @@ public class ContactsView extends VerticalLayout implements BeforeEnterObserver 
     String contactID;
 
     Label lblUsername = new Label();
-    Button btnLogOut = new Button("Çıkış Yap");
+    Button btnLogOut = new Button("Sign out");
 
-    TextField search = new TextField("","Ara");
+    TextField search = new TextField("","Search");
     Icon iconAdd = new Icon(VaadinIcon.PLUS);
 
     Div contactsDiv = new Div();
