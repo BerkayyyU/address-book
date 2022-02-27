@@ -191,7 +191,7 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
             btnUpdatePhone.addClickListener(buttonClickEvent -> {
                 phoneService.update(phone,selectPhoneType.getValue(),txtPhoneNo.getValue());
                 dialog.close();
-                UI.getCurrent().getPage().reload(); });
+                 });
         });
         //---------------------------------------ADDRESS-------------------------------------------------
         addAddress.addClickListener(iconClickEvent -> {
@@ -330,7 +330,7 @@ public class NewContactView extends VerticalLayout implements BeforeEnterObserve
                 phone.setContact(newContact);
                 phoneService.save(phone);
                 contactService.update(newContact, firstName.getValue(), lastName.getValue(), company.getValue());
-                UI.getCurrent().getPage().reload();
+
                 binderBind(); }
         });
 

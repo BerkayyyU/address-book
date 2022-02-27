@@ -17,6 +17,6 @@ public class WebsiteUser {
     private String email;
     private String password;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "websiteUser")
     private Set<Contact> contacts = new HashSet<>();
 }

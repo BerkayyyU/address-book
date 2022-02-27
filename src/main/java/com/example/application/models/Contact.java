@@ -24,7 +24,7 @@ public class Contact {
     @Lob
     private  byte[] image;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private WebsiteUser websiteUser;
 
 
